@@ -1,11 +1,5 @@
-﻿using Core;
+﻿using Core.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Database
 {
     public class AppDbContext : DbContext
@@ -16,5 +10,25 @@ namespace Database
         }
 
         public DbSet<Farmer> Farmers { get; set; }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.DateCreated = DateTime.UtcNow;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.DateUpdated = DateTime.UtcNow;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
     }
 }

@@ -1,0 +1,438 @@
+﻿<Page
+    x:Class="Frontend.transport"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Frontend"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <NavigationView 
+            PaneDisplayMode="LeftCompact"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            CompactPaneLength="48"
+            OpenPaneLength="256">
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Dashboard" Tag="dashboard" Icon="Home" Tapped="NavigationViewItem_Tapped_6"/>
+                <NavigationViewItem Content="Farmers Payment" Tag="livestock" Icon="People" Tapped="NavigationViewItem_Tapped"/>
+                <NavigationViewItem Content="Expenses" Tag="expenses" Icon="Shop" Tapped="NavigationViewItem_Tapped_1"/>
+                <NavigationViewItem Content="Transport" Tag="transport" Icon="Directions" IsSelected="True" Tapped="NavigationViewItem_Tapped_2"/>
+                <NavigationViewItem Content="Collections" Tag="collects" Icon="Library" Tapped="NavigationViewItem_Tapped_3"/>
+                <NavigationViewItem Content="Advances" Tag="advances" Icon="Calculator" Tapped="NavigationViewItem_Tapped_4"/>
+            </NavigationView.MenuItems>
+        </NavigationView>
+
+        <!-- Main Header -->
+        <TextBlock Text="Transport Review" 
+             FontSize="28" 
+             FontWeight="Bold" 
+             VerticalAlignment="Top" 
+             Margin="280,10,0,0" />
+
+        <!-- DairyFlow Subtitle -->
+        <TextBlock Text="DAIryFlow"
+             FontWeight="SemiBold"
+             FontSize="16"
+             Foreground="#666"
+             VerticalAlignment="Top"
+             Margin="280,45,0,0" />
+
+        <TextBlock Text="SYSTEM ADMINISTRATOR"
+             FontSize="12"
+             Foreground="#888"
+             VerticalAlignment="Top"
+             Margin="280,68,0,0" />
+
+        <!-- Search Box -->
+        <TextBox PlaceholderText="Search transport..."
+              FontSize="14"
+              CornerRadius="10"
+              Background="White"
+              Width="200"
+              Margin="864,10,0,0"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top"/>
+
+        <Button Content="+ Add Transport"
+          FontSize="14"
+          Background="#2E7D32"
+          CornerRadius="10"
+          Foreground="White"
+          Width="140"
+          Margin="1080,10,0,0"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Top"/>
+
+        <!-- Main Title -->
+        <TextBlock Text="Transport Logistics"
+             FontSize="24"
+             FontWeight="Bold"
+             Margin="280,100,0,0"
+             VerticalAlignment="Top"/>
+
+        <!-- Fleet Overview Text -->
+        <TextBlock Text="Fleet Overview"
+             FontSize="16"
+             FontWeight="SemiBold"
+             Foreground="#2E7D32"
+             Margin="280,135,0,0"
+             VerticalAlignment="Top"/>
+
+        <TextBlock Text="Manage active routes and schedule new milk collection trips."
+             FontSize="13"
+             Foreground="#666"
+             Margin="280,160,0,0"
+             VerticalAlignment="Top"/>
+
+        <!-- Schedule Trip Card -->
+        <Border Background="White" 
+          CornerRadius="12"
+          Margin="280,190,50,0"
+          Width="380"
+          Height="480"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Top">
+            <StackPanel Margin="20">
+                <TextBlock Text="Schedule Trip"
+                     FontWeight="Bold"
+                     FontSize="18"
+                     Margin="0,0,0,15"/>
+
+                <!-- Driver Name -->
+                <TextBlock Text="Driver Name"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#2E7D32"
+                     Margin="0,5,0,5"/>
+                <ComboBox PlaceholderText="Select a driver"
+                    CornerRadius="8"
+                    Height="40"
+                    Margin="0,0,0,15">
+                    <ComboBoxItem Content="Marcus Aurelius"/>
+                    <ComboBoxItem Content="Elena Rodriguez"/>
+                    <ComboBoxItem Content="John Kiplagat"/>
+                    <ComboBoxItem Content="Samuel Cikoye"/>
+                </ComboBox>
+
+                <!-- Vehicle ID -->
+                <TextBlock Text="Vehicle ID"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#2E7D32"
+                     Margin="0,5,0,5"/>
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox PlaceholderText="e.g. TR-904"
+                       CornerRadius="8"
+                       Height="40"
+                       Grid.Column="0"/>
+                    <ComboBox Grid.Column="1" 
+                        Width="100"
+                        Margin="10,0,0,0"
+                        CornerRadius="8"
+                        Height="40"
+                        SelectedIndex="0">
+                        <ComboBoxItem Content="Raw Milk"/>
+                        <ComboBoxItem Content="Supplies"/>
+                        <ComboBoxItem Content="Equipment"/>
+                    </ComboBox>
+                </Grid>
+
+                <!-- Destination -->
+                <TextBlock Text="Destination"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#2E7D32"
+                     Margin="0,5,0,5"/>
+                <ComboBox PlaceholderText="Select destination"
+                    CornerRadius="8"
+                    Height="40"
+                    Margin="0,0,0,15">
+                    <ComboBoxItem Content="Processing Plant B"/>
+                    <ComboBoxItem Content="Central Hub"/>
+                    <ComboBoxItem Content="West Meadow"/>
+                    <ComboBoxItem Content="North Plant"/>
+                    <ComboBoxItem Content="Eastern Sector"/>
+                </ComboBox>
+
+                <!-- Departure Time -->
+                <TextBlock Text="Departure Time"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="#2E7D32"
+                     Margin="0,5,0,5"/>
+                <TimePicker Margin="0,0,0,20"
+                      CornerRadius="8"
+                      Height="40"
+                      HorizontalAlignment="Left"
+                      Width="264"/>
+
+                <!-- Confirm Schedule Button -->
+                <Button Content="Confirm Schedule"
+                  Background="#2E7D32"
+                  Foreground="White"
+                  CornerRadius="8"
+                  Height="45"
+                  FontSize="14"
+                  FontWeight="SemiBold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Right Side Stats Cards -->
+        <StackPanel Margin="680,190,50,0" 
+              VerticalAlignment="Top"
+              Width="420">
+
+            <!-- Pending & Active Trips Card -->
+            <Border Background="White" 
+              CornerRadius="12"
+              Margin="0,0,0,15"
+              Padding="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Pending &amp; Active Trips"
+                         FontWeight="Bold"
+                         FontSize="16"
+                         Margin="20,20,0,10"
+                         Foreground="#2E7D32"/>
+
+                    <!-- Trip 1 -->
+                    <Border Background="#F5F5F5" 
+                      CornerRadius="8" 
+                      Margin="15,5,15,5"
+                      Padding="12,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Marcus Aurelius" 
+                                     FontWeight="Bold" 
+                                     FontSize="14"/>
+                                <TextBlock Text="TR-904 · Milk" 
+                                     FontSize="11" 
+                                     Foreground="#666"/>
+                                <TextBlock Text="Central Hub → Processing Plant" 
+                                     FontSize="11" 
+                                     Foreground="#888"/>
+                            </StackPanel>
+                            <Border Background="#4CAF50" 
+                              CornerRadius="12" 
+                              Height="24" 
+                              Width="60"
+                              Grid.Column="1"
+                              VerticalAlignment="Center">
+                                <TextBlock Text="ACTIVE" 
+                                     FontSize="10" 
+                                     Foreground="White" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Trip 2 -->
+                    <Border Background="#F5F5F5" 
+                      CornerRadius="8" 
+                      Margin="15,5,15,5"
+                      Padding="12,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Elena Rodriguez" 
+                                     FontWeight="Bold" 
+                                     FontSize="14"/>
+                                <TextBlock Text="TR-822 · Supplies" 
+                                     FontSize="11" 
+                                     Foreground="#666"/>
+                                <TextBlock Text="West Meadow · Dep: 15:00 On Schedule" 
+                                     FontSize="11" 
+                                     Foreground="#888"/>
+                            </StackPanel>
+                            <Border Background="#2196F3" 
+                              CornerRadius="12" 
+                              Height="24" 
+                              Width="70"
+                              Grid.Column="1"
+                              VerticalAlignment="Center">
+                                <TextBlock Text="LOADING" 
+                                     FontSize="10" 
+                                     Foreground="White" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Trip 3 -->
+                    <Border Background="#F5F5F5" 
+                      CornerRadius="8" 
+                      Margin="15,5,15,5"
+                      Padding="12,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Unassigned" 
+                                     FontWeight="Bold" 
+                                     FontSize="14"/>
+                                <TextBlock Text="TR-104 · Milk" 
+                                     FontSize="11" 
+                                     Foreground="#666"/>
+                                <TextBlock Text="North Plant · High Priority" 
+                                     FontSize="11" 
+                                     Foreground="#F44336"/>
+                            </StackPanel>
+                            <Border Background="#FF9800" 
+                              CornerRadius="12" 
+                              Height="24" 
+                              Width="70"
+                              Grid.Column="1"
+                              VerticalAlignment="Center">
+                                <TextBlock Text="PENDING" 
+                                     FontSize="10" 
+                                     Foreground="White" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Assign Now Button -->
+                    <Button Content="Assign Now"
+                      Background="#FF9800"
+                      Foreground="White"
+                      CornerRadius="8"
+                      Height="35"
+                      FontSize="12"
+                      Margin="15,10,15,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Stats Grid -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Fuel Efficiency Card -->
+                <Border Background="White" 
+                  CornerRadius="12"
+                  Margin="0,0,10,0"
+                  Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="FUEL EFFICIENCY"
+                             FontSize="10"
+                             Foreground="#888"
+                             />
+                        <TextBlock Text="94%"
+                             FontSize="28"
+                             FontWeight="Bold"
+                             Foreground="#2E7D32"/>
+                        <TextBlock Text="↑ 3% from last month"
+                             FontSize="10"
+                             Foreground="#4CAF50"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Average Transit Card -->
+                <Border Background="White" 
+                  CornerRadius="12"
+                  Margin="10,0,0,0"
+                  Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="AVERAGE TRANSIT"
+                             FontSize="10"
+                             Foreground="#888"
+                            />
+                        <TextBlock Text="42 min"
+                             FontSize="28"
+                             FontWeight="Bold"
+                             Foreground="#2196F3"/>
+                        <TextBlock Text="On schedule"
+                             FontSize="10"
+                             Foreground="#4CAF50"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Fleet Status Card -->
+            <Border Background="White" 
+              CornerRadius="12"
+              Margin="0,10,0,0"
+              Padding="20">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="FLEET STATUS"
+                             FontSize="10"
+                             Foreground="#888"
+                             />
+                        <TextBlock Text="12/15"
+                             FontSize="20"
+                             FontWeight="Bold"
+                             Foreground="#2E7D32"
+                             Grid.Column="1"/>
+                    </Grid>
+                    <TextBlock Text="Service Active"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Margin="0,5,0,0"/>
+                    <ProgressBar Value="80" 
+                           Height="6" 
+                           CornerRadius="3"
+                           Background="#E0E0E0"
+                           Foreground="#2E7D32"
+                           Margin="0,10,0,0"/>
+                    <TextBlock Text="12 vehicles active · 3 in maintenance"
+                         FontSize="10"
+                         Foreground="#888"
+                         Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Active Fleet Location Card -->
+            <Border Background="White" 
+              CornerRadius="12"
+              Margin="0,10,0,0"
+              Padding="20">
+                <StackPanel>
+                    <TextBlock Text="ACTIVE FLEET LOCATION"
+                         FontSize="10"
+                         Foreground="#888"
+                        />
+                    <TextBlock Text="Eastern Sector Route 4"
+                         FontSize="16"
+                         FontWeight="Bold"
+                         Margin="0,8,0,5"/>
+                    <Border Background="#E8F5E9" 
+                      CornerRadius="8" 
+                      Height="80"
+                      Margin="0,10,0,0">
+                        <TextBlock Text="🗺️ View Map"
+                             FontSize="12"
+                             Foreground="#2E7D32"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Page>

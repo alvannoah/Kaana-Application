@@ -7,27 +7,86 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    
     <Grid>
-        <StackPanel Padding="20">
+        <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <!-- Background Layer -->
+    <Grid Background="#FAFAED"
+          Padding="20">
 
-            <!-- Input -->
-            <TextBox Header="Farmer Name"
-             Text="{Binding NewFarmerName, Mode=TwoWay}" />
-
-            <!-- Button -->
-            <Button Content="Add Farmer"
-            Click="AddFarmer_Click"/>
-
-            <!-- List -->
-            <ListView ItemsSource="{Binding Farmers}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
+        <Image Source="https://lh3.googleusercontent.com/aida-public/AB6AXuBHCYOIlaki_EpZOY0YyK9lKY996AM_shBPsxSdyuxjyMhvOTEhL6vTPUX38iTaGYysVPQ0PmjmzDsYYa8054APntX85ulYgcOovHcIDBSEnmJFncixD3tGbDwr8Fc7F-O9K9S30-J8cIygsu0hsC6Kcw9FtD0ctw5Gg7RztJb6FkYsGKa4I-T3hSUXe6LjqYaNSOUU71cQbSuTW1LEuotJ38YNNm4Cz_Jvewg1E2BU9mb6LWoPUzuP4NbegTcQaNuu5zH2L2_XqxYy"
+               Stretch="Uniform"
+               Margin="247,80,267,200" />
+        <StackPanel Orientation="Vertical"
+                    Grid.Row="0"
+                    >
+            <TextBlock Text="Kanna Diary"
+                       FontSize="36"
+                       FontFamily="Segoe UI"
+                       FontWeight="Bold"
+                       Foreground="#333333"
+                       HorizontalAlignment="Center"
+                       Margin="0,70,0,10"/>
+            <TextBlock Text="Your personal diary app"
+                       FontSize="18"
+                       FontFamily="Segoe UI"
+                       Foreground="#666666"
+                       HorizontalAlignment="Center"/>
         </StackPanel>
+    </Grid>
+
+    <!-- Main Layout: Centered with proper spacing -->
+    <StackPanel Orientation="Vertical"
+              Background="White"
+                Padding="20"
+                Grid.Row="0"
+                CornerRadius="20"
+                RenderTransformOrigin="0.42,0.478" 
+                Margin="436,229,381,425">
+        <TextBlock Text="Login Form"
+                   FontSize="28"
+                   FontFamily="Segoe UI"
+                   FontWeight="Bold"
+                   Foreground="#333333"
+                   HorizontalAlignment="Left"
+                   Margin="0,0,0,10"/>
+        <TextBlock Text="Username"
+                   FontSize="24"
+                   FontFamily="Segoe UI"
+                   FontWeight="SemiBold"
+                   Foreground="#333333"
+                   HorizontalAlignment="Left"
+                   Margin="0,10,0,10"/>
+        <TextBox PlaceholderText="Username"
+                 Margin="0,0,0,10"/>
+        <TextBlock Text="Password"
+                   FontSize="24"
+                   FontFamily="Segoe UI"
+                   FontWeight="SemiBold"
+                   Foreground="#333333"
+                   HorizontalAlignment="Left"
+                   Margin="0,0,0,10"/>
+        <PasswordBox PlaceholderText="Password"
+                     Margin="0,0,0,20"/>
+        <Button Content="Login"
+                HorizontalAlignment="Center"
+                Background="Green"
+                CornerRadius="10"
+                Foreground="White" FontWeight="Bold" Click="Button_Click_1"
+                />
+        <CheckBox Content="Remember me"
+                  Margin="0,10,0,0"
+                  HorizontalAlignment="Left"/>
+        <TextBlock Text="Don't have an account? Sign up"
+                   FontSize="14"
+                   FontFamily="Segoe UI"
+                   Foreground="Green"
+                   HorizontalAlignment="Center"       
+                      Margin="0,20,0,0"/>
+    </StackPanel>
+
     </Grid>
 </Page>

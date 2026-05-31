@@ -1,0 +1,446 @@
+﻿<Page
+    x:Class="Frontend.collections"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Frontend"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="#ede8b4">
+        <NavigationView 
+              PaneDisplayMode="LeftCompact"
+              IsBackButtonVisible="Collapsed"
+              IsSettingsVisible="False"
+              CompactPaneLength="48"
+              OpenPaneLength="256">
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Dashboard" Tag="dashboard" Icon="Home" Tapped="NavigationViewItem_Tapped_1"/>
+                <NavigationViewItem Content="farmers payment" Tag="livestock" Icon="People" Tapped="NavigationViewItem_Tapped_2"/>
+                <NavigationViewItem Content="expenses" Tag="expeses" Icon="Shop" Tapped="NavigationViewItem_Tapped_3"/>
+                <NavigationViewItem Content="transport" Tag="transport" Icon="Directions" Tapped="NavigationViewItem_Tapped_4"/>
+                <NavigationViewItem Content="collections" Tag="collects" Icon="Library" IsSelected="True" Tapped="NavigationViewItem_Tapped_5"/>
+                <NavigationViewItem Content="advances" Tag="advances" Icon="Calculator" Tapped="NavigationViewItem_Tapped"/>
+            </NavigationView.MenuItems>
+        </NavigationView>
+
+        <!-- Main Title -->
+        <TextBlock Text="Milk Collections"
+                   FontWeight="Bold" 
+                   FontSize="28"
+                   VerticalAlignment="Top" 
+                   Margin="280,10,0,0" />
+
+        <!-- DairyFlow Subtitle -->
+        <TextBlock Text="DairyFlow"
+                   FontWeight="SemiBold"
+                   FontSize="16"
+                   Foreground="#666"
+                   VerticalAlignment="Top"
+                   Margin="280,45,0,0" />
+
+        <TextBlock Text="MANAGEMENT • Operations Hub"
+                   FontSize="12"
+                   Foreground="#888"
+                   VerticalAlignment="Top"
+                   Margin="280,68,0,0" />
+
+        <!-- Search Box -->
+        <TextBox PlaceholderText="Search collections..."
+                FontSize="14"
+                CornerRadius="10"
+                Background="White"
+                Width="200"
+                Margin="864,10,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"/>
+
+        <Button Content="+ New Collection"
+                FontSize="14"
+                Background="#2E7D32"
+                CornerRadius="10"
+                Foreground="White"
+                Width="140"
+                Margin="1080,10,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"/>
+
+        <!-- Stats Cards Row -->
+        <Border Background="White" 
+                CornerRadius="12"
+                Margin="280,110,50,0"
+                Height="110"
+                VerticalAlignment="Top">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Total Collected -->
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="TOTAL COLLECTED"
+                               FontSize="10"
+                               Foreground="#888"
+                               />
+                    <TextBlock Text="1,248.5 Ltrs"
+                               FontSize="22"
+                               FontWeight="Bold"/>
+                    <TextBlock Text="▲ 4.2% vs yesterday"
+                               FontSize="10"
+                               Foreground="#4CAF50"/>
+                </StackPanel>
+
+                <Border Grid.Column="1" Width="1" Background="#E0E0E0" Margin="20,0"/>
+
+                <!-- Avg Fat % -->
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="AVG FAT %"
+                               FontSize="10"
+                               Foreground="#888"/>
+                    <TextBlock Text="4.12%"
+                               FontSize="22"
+                               FontWeight="Bold"/>
+                    <TextBlock Text="Standard quality met"
+                               FontSize="10"
+                               Foreground="#4CAF50"/>
+                </StackPanel>
+
+                <Border Grid.Column="3" Width="1" Background="#E0E0E0" Margin="20,0"/>
+
+                <!-- Avg SNF % -->
+                <StackPanel Grid.Column="4">
+                    <TextBlock Text="AVG SNF %"
+                               FontSize="10"
+                               Foreground="#888"/>
+                    <TextBlock Text="8.45%"
+                               FontSize="22"
+                               FontWeight="Bold"/>
+                    <TextBlock Text="▼ 0.2% drop from avg"
+                               FontSize="10"
+                               Foreground="#FF9800"/>
+                </StackPanel>
+
+                <Border Grid.Column="5" Width="1" Background="#E0E0E0" Margin="20,0"/>
+
+                <!-- Farmer Count -->
+                <StackPanel Grid.Column="6">
+                    <TextBlock Text="FARMER COUNT"
+                               FontSize="10"
+                               Foreground="#888"
+                               />
+                    <TextBlock Text="42 Active"
+                               FontSize="22"
+                               FontWeight="Bold"/>
+                    <TextBlock Text="48.89% participation"
+                               FontSize="10"
+                               Foreground="#2196F3"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Daily Milk Collection Form Card -->
+        <Border Background="White" 
+                CornerRadius="12"
+                Margin="280,235,50,0"
+                Height="430"
+                VerticalAlignment="Top">
+            <StackPanel Margin="20">
+                <TextBlock Text="Daily Milk Collection"
+                           FontWeight="Bold"
+                           FontSize="18"
+                           Margin="0,0,0,15"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Farmer Name / ID -->
+                    <TextBlock Text="Farmer Name / ID"
+                               FontWeight="SemiBold"
+                               FontSize="12"
+                               Foreground="#2E7D32"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,10"/>
+                    <TextBox PlaceholderText="Search farmer name or enter ID"
+                             Grid.Row="0"
+                             Grid.Column="1"
+                             CornerRadius="8"
+                             Height="40"
+                             Margin="0,0,0,10"/>
+
+                    <!-- Quantity and Session Row -->
+                    <TextBlock Text="Quantity (Ltrs)"
+                               FontWeight="SemiBold"
+                               FontSize="12"
+                               Foreground="#2E7D32"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,10"/>
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox PlaceholderText="0.0"
+                                 CornerRadius="8"
+                                 Height="40"
+                                 Grid.Column="0"
+                                 Width="120"
+                                 TextAlignment="Center"/>
+                        <ComboBox Grid.Column="1" 
+                                  Width="120"
+                                  Margin="10,0,0,0"
+                                  CornerRadius="8"
+                                  Height="40"
+                                  HorizontalAlignment="Left">
+                            <ComboBoxItem Content="Morning" IsSelected="True"/>
+                            <ComboBoxItem Content="Evening"/>
+                        </ComboBox>
+                    </Grid>
+
+                    <!-- Fat % -->
+                    <TextBlock Text="Fat %"
+                               FontWeight="SemiBold"
+                               FontSize="12"
+                               Foreground="#2E7D32"
+                               Grid.Row="2"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,10"/>
+                    <TextBox Text="3.50"
+                             Grid.Row="2"
+                             Grid.Column="1"
+                             CornerRadius="8"
+                             Height="40"
+                             Width="120"
+                             Margin="0,0,0,10"
+                             HorizontalAlignment="Left"/>
+
+                    <!-- SNF % -->
+                    <TextBlock Text="SNF %"
+                               FontWeight="SemiBold"
+                               FontSize="12"
+                               Foreground="#2E7D32"
+                               Grid.Row="3"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,10"/>
+                    <TextBox Text="8.50"
+                             Grid.Row="3"
+                             Grid.Column="1"
+                             CornerRadius="8"
+                             Height="40"
+                             Width="120"
+                             Margin="0,0,0,10"
+                             HorizontalAlignment="Left"/>
+
+                    <!-- Calculated Rate -->
+                    <Border Grid.Row="4"
+                            Grid.Column="1"
+                            Background="#E8F5E9"
+                            CornerRadius="8"
+                            Padding="15,10"
+                            Margin="0,10,0,10">
+                        <StackPanel>
+                            <TextBlock Text="Calculated Rate:"
+                                       FontSize="11"
+                                       Foreground="#666"/>
+                            <TextBlock Text="$ 42.50 / Ltr"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="#2E7D32"/>
+                            <TextBlock Text="Based on today's quality pricing grid"
+                                       FontSize="10"
+                                       Foreground="#888"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Record Collection Button -->
+                    <Button Grid.Row="5"
+                            Grid.Column="1"
+                            Content="Record Collection"
+                            Background="#2E7D32"
+                            Foreground="White"
+                            CornerRadius="8"
+                            Height="45"
+                            Width="160"
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Left"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Today's Collections Card -->
+        <Border Background="White" 
+                CornerRadius="12"
+                Margin="280,683,50,0"
+                VerticalAlignment="Top" Height="306">
+            <StackPanel Margin="20">
+                <TextBlock Text="Today's Collections"
+                           FontWeight="SemiBold"
+                           FontSize="16"
+                           Foreground="#2E7D32"
+                           Margin="0,0,0,15"/>
+
+                <!-- Table Header -->
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="FARMER" 
+                               FontWeight="Bold" 
+                               Foreground="#666" 
+                               FontSize="11"/>
+                    <TextBlock Text="QTY" 
+                               FontWeight="Bold" 
+                               Foreground="#666" 
+                               FontSize="11"
+                               Grid.Column="1"
+                               TextAlignment="Center"/>
+                    <TextBlock Text="FAT/SNF" 
+                               FontWeight="Bold" 
+                               Foreground="#666" 
+                               FontSize="11"
+                               Grid.Column="2"
+                               TextAlignment="Center"/>
+                    <TextBlock Text="TOTAL ($)" 
+                               FontWeight="Bold" 
+                               Foreground="#666" 
+                               FontSize="11"
+                               Grid.Column="3"
+                               TextAlignment="Right"/>
+                    <TextBlock Text="ACTIONS" 
+                               FontWeight="Bold" 
+                               Foreground="#666" 
+                               FontSize="11"
+                               Grid.Column="4"
+                               TextAlignment="Center"/>
+                </Grid>
+
+                <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
+
+                <!-- Row 1 -->
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="John Harrison" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock Text="#DF-0822" FontSize="10" Foreground="#888"/>
+                    </StackPanel>
+                    <TextBlock Text="24.5 L" FontSize="12" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock Text="4.2 / 8.6" FontSize="12" Grid.Column="2" TextAlignment="Center"/>
+                    <TextBlock Text="$1,041.25" FontSize="12" FontWeight="SemiBold" Grid.Column="3" TextAlignment="Right"/>
+                    <Button Content="⋯" Background="Transparent" BorderThickness="0" FontSize="16" Grid.Column="4" HorizontalAlignment="Center"/>
+                </Grid>
+
+                <!-- Row 2 -->
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Elena Rodriguez" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock Text="#DF-1054" FontSize="10" Foreground="#888"/>
+                    </StackPanel>
+                    <TextBlock Text="18.2 L" FontSize="12" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock Text="3.8 / 8.4" FontSize="12" Grid.Column="2" TextAlignment="Center"/>
+                    <TextBlock Text="$746.20" FontSize="12" FontWeight="SemiBold" Grid.Column="3" TextAlignment="Right"/>
+                    <Button Content="⋯" Background="Transparent" BorderThickness="0" FontSize="16" Grid.Column="4" HorizontalAlignment="Center"/>
+                </Grid>
+
+                <!-- Row 3 -->
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Samuel Cikoye" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock Text="#DF-0551" FontSize="10" Foreground="#888"/>
+                    </StackPanel>
+                    <TextBlock Text="31.0 L" FontSize="12" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock Text="4.1 / 8.9" FontSize="12" Grid.Column="2" TextAlignment="Center"/>
+                    <TextBlock Text="$1,317.50" FontSize="12" FontWeight="SemiBold" Grid.Column="3" TextAlignment="Right"/>
+                    <Button Content="⋯" Background="Transparent" BorderThickness="0" FontSize="16" Grid.Column="4" HorizontalAlignment="Center"/>
+                </Grid>
+
+                <!-- Row 4 -->
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Lars Nielsen" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock Text="#DF-1229" FontSize="10" Foreground="#888"/>
+                    </StackPanel>
+                    <TextBlock Text="12.5 L" FontSize="12" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock Text="4.5 / 8.9" FontSize="12" Grid.Column="2" TextAlignment="Center"/>
+                    <TextBlock Text="$562.50" FontSize="12" FontWeight="SemiBold" Grid.Column="3" TextAlignment="Right"/>
+                    <Button Content="⋯" Background="Transparent" BorderThickness="0" FontSize="16" Grid.Column="4" HorizontalAlignment="Center"/>
+                </Grid>
+
+                <Border Height="1" Background="#E0E0E0"/>
+
+                <Grid Margin="0,10,0,0">
+                    <TextBlock Text="Showing 4 of 42 collections"
+                               FontSize="11"
+                               Foreground="#888"
+                               HorizontalAlignment="Left"/>
+                    <Button Content="View All Collections"
+                            Background="Transparent"
+                            Foreground="#2E7D32"
+                            BorderThickness="0"
+                            FontSize="12"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

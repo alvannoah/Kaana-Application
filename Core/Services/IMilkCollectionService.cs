@@ -11,5 +11,7 @@ namespace Core.Services
     {
         Task AddMilkCollection(MilkCollection milkCollection);
         Task<List<MilkCollection>> GetMilkCollections();
+        Task<MilkCollection> GetMilkCollectionById(long id);
+        Task UpdateMilkCollection(MilkCollection farmer);
     }
 }

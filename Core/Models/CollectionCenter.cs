@@ -23,6 +23,8 @@ namespace Core.Models
 
         public ICollection<Expense> Expenses { get; set; }
 
-        public ICollection<FactorySale> FactorySales { get; set; }
+        public ICollection<MilkBuyer> FactorySales { get; set; }
+
+        public ICollection<Farmer> Farmers { get; set; }
     }
 }

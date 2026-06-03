@@ -10,6 +10,8 @@ namespace Core.Services
     public interface IFarmerService
     {
         Task AddFarmer(Farmer farmer);
+        Task<Farmer> GetFarmerById(long id);
         Task<List<Farmer>> GetFarmers();
+        Task UpdateFarmer(Farmer farmer);
     }
 }

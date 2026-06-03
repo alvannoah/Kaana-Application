@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class Role: BaseEntity
+    public class MilkBuyer : BaseEntity
     {
         public string Name { get; set; }
 
+        public string ContactPerson { get; set; }
 
+        public ICollection<MilkLoading> Loadings { get; set; }
     }
 }

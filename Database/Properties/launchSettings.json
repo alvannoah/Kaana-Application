@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Database": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DB_LOCATION": "C:\\Users\\ThyFellow\\AppData\\Local\\Packages\\51ae0c25-605a-426d-a8ca-2d3ab0f85152_xmed2a7jkj8s2\\AC\\kaana.db"
+      }
+    }
+  }
+}

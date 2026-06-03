@@ -1,4 +1,6 @@
-﻿using Frontend.ViewModels;
+﻿using Core.Models;
+using Frontend;
+using Frontend.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,8 +13,6 @@ namespace frontend
     public sealed partial class MainPage : Page
     {
         public FarmerViewModel ViewModel { get; }
-
-
 
         public MainPage()
         {
@@ -27,6 +27,12 @@ namespace frontend
         private async void AddFarmer_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.AddFarmer();
+        }
+
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var farmer = (Farmer)e.ClickedItem;
+            Frame.Navigate(typeof(ModifierFarmer), farmer.Id);
         }
     }
 }

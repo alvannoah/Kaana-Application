@@ -12,18 +12,24 @@
         <StackPanel Padding="20">
 
             <!-- Input -->
-            <TextBox Header="Farmer Name"
-             Text="{Binding NewFarmerName, Mode=TwoWay}" />
+            <TextBox Header="First Name"
+             Text="{Binding FirstName, Mode=TwoWay}" />
+
+            <TextBox Header="Last Name"
+                     Text="{Binding LastName, Mode=TwoWay}" />
 
             <!-- Button -->
             <Button Content="Add Farmer"
             Click="AddFarmer_Click"/>
 
             <!-- List -->
-            <ListView ItemsSource="{Binding Farmers}">
+            <ListView ItemsSource="{Binding Farmers}" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}" />
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock Text="{Binding FirstName}" />
+                            <TextBlock Margin="10 0 0 0" Text="{Binding LastName}" />
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

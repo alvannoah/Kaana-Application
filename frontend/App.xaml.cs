@@ -1,4 +1,4 @@
-﻿using Core;
+﻿using Core.Services;
 using Database;
 using Frontend.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +39,11 @@ namespace frontend
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
-            var dbPath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "kaana.db");
+            //var dbPath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "kaana.db");
+            var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "kaana.db");
+
+
+            System.Diagnostics.Debug.WriteLine(dbPath);
 
             var services = new ServiceCollection();
 
@@ -54,7 +58,7 @@ namespace frontend
             using (var scope = Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Database.EnsureCreated();
+                db.Database.Migrate();
             }
 
             // Do not repeat app initialization when the Window already has content,

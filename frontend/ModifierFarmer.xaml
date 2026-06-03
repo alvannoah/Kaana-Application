@@ -22,7 +22,7 @@
                 Margin="0,20,0,0"
                 Spacing="10">
 
-            <TextBlock Foreground="White" Text="{Binding SelectedFarmer.Name }" FontSize="20" />
+            <TextBlock Foreground="White" Text="{Binding SelectedFarmer.FirstName }" FontSize="20" />
 
             <TextBox Header="First Name"
                  Text="{Binding SelectedFarmer.FirstName, Mode=TwoWay}" />

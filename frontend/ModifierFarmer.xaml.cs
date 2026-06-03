@@ -29,7 +29,7 @@ namespace Frontend
             var farmerId = (long)e.Parameter;
 
             await ViewModel.LoadFarmer(farmerId);
-            System.Diagnostics.Debug.WriteLine(ViewModel.SelectedFarmer.Name);
+            System.Diagnostics.Debug.WriteLine(ViewModel.SelectedFarmer.FirstName);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -26,13 +26,13 @@
                         FontSize="18"
                         FontWeight="Bold"/>
 
-                    <TextBox Header="Name"
+                    <TextBox Header="Branch Name*"
                              Text="{Binding FormModel.Name, Mode=TwoWay}" />
 
                     <TextBox Header="Location"
                              Text="{Binding FormModel.Location, Mode=TwoWay}" />
 
-                    <TextBox Header="Manager"
+                    <TextBox Header="Manager' Name*"
                              Text="{Binding FormModel.ManagerName, Mode=TwoWay}" />
 
                     <TextBox Header="Phone Number"

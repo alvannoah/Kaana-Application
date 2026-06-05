@@ -1,9 +1,11 @@
 ﻿using Core.Models;
 using Core.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Frontend.ViewModels
 {
@@ -103,6 +105,17 @@ namespace Frontend.ViewModels
 
         private async Task Save()
         {
+            if(FormModel.PhoneNumber.Equals(""))
+            {
+                await ShowMessageDialogAsync("Validation Error", "Phone number cannot be empty.");
+                return;
+            }
+            else if (FormModel.PhoneNumber.Length != 10)
+            {
+                await ShowMessageDialogAsync("Validation Error", "Phone number must be 10 digits.");
+                return;
+            }
+
             if (IsEditMode)
             {
                 await _service.UpdateMilkBuyer(FormModel);
@@ -134,6 +147,22 @@ namespace Frontend.ViewModels
             PropertyChanged?.Invoke(
                 this,
                 new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async Task ShowMessageDialogAsync(string title, string content)
+        {
+            ContentDialog errorDialog = new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.ContentDialog"))
+            {
+                await errorDialog.ShowAsync();
+            }
         }
     }
 }

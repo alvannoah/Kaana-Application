@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Frontend.ViewModels
 {
@@ -119,6 +120,41 @@ namespace Frontend.ViewModels
 
         private async Task Save()
         {
+            if (string.IsNullOrWhiteSpace(FormModel.ReceiverName))
+            {
+                await ShowMessageDialogAsync("Validation Error!", "Receiver name cannot be empty.");
+                return;
+            } else if (string.IsNullOrWhiteSpace(FormModel.ReceiverName))
+            {
+                await ShowMessageDialogAsync("Validation Error!", "Receiver name cannot be empty.");
+                return;
+            }
+            else if (string.IsNullOrWhiteSpace(FormModel.VehicleNumber))
+            {
+                await ShowMessageDialogAsync("Validation Error!", "Vehicle number cannot be empty.");
+                return;
+            }
+            else if (FormModel.MilkBuyerId == 0)
+            {
+                await ShowMessageDialogAsync("Validation Error!", "Please select a milk buyer.");
+                return;
+            }
+             else if (FormModel.LitresLoaded <= 0)
+            {
+                await ShowMessageDialogAsync("Validation Error!", "Litres loaded must be greater than zero.");
+                return;
+            }
+             else if (FormModel.PricePerLitre <= 0)
+            {
+                await ShowMessageDialogAsync("Validation Error!", "Price per litre must be greater than zero.");
+                return;
+            }
+            else if (FormModel.CollectedLitres <= 0)
+            {
+                await ShowMessageDialogAsync("Validation Error!", " Collected Litres must be greater than zero.");
+                return;
+            }
+
             if (IsEditMode)
             {
                 await _service.UpdateMilkLoading(FormModel);
@@ -147,6 +183,22 @@ namespace Frontend.ViewModels
         {
             PropertyChanged?.Invoke(this,
                 new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async Task ShowMessageDialogAsync(string title, string content)
+        {
+            ContentDialog errorDialog = new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.ContentDialog"))
+            {
+                await errorDialog.ShowAsync();
+            }
         }
     }
 }

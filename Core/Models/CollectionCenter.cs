@@ -10,9 +10,9 @@ namespace Core.Models
     {
         public string Name { get; set; }
 
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         public string ManagerName { get; set; }
 

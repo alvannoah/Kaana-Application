@@ -28,12 +28,12 @@
                                    FontWeight="Bold"
                                    Foreground="#4CAF50"/>
 
-                        <TextBox Header="Expense Title / Description"
+                        <TextBox Header="Expense Title / Description*"
                                  Text="{Binding FormModel.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBox Header="Quantity"
                                 Text="{Binding FormModel.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <DatePicker Header="Date Incurred"
+                        <DatePicker Header="Date Incurred*"
                                     HorizontalAlignment="Stretch"
                                     Date="{Binding FormModel.Date, Mode=TwoWay}"/>
 

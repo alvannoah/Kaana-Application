@@ -9,71 +9,130 @@ namespace Frontend.ViewModels
 {
     public class FarmerViewModel : INotifyPropertyChanged
     {
-        private readonly IFarmerService _service;
+        private readonly IFarmerService _farmerService;
+        private readonly ICollectionCenterService _centerService;
+
+        public FarmerViewModel(IFarmerService farmerService,
+                                ICollectionCenterService centerService)
+        {
+            _farmerService = farmerService;
+            _centerService = centerService;
+
+            FormModel = new Farmer();
+
+            OpenAddCommand = new RelayCommand<Farmer>(async f => OpenAdd());
+            OpenEditCommand = new RelayCommand<Farmer>(async f => OpenEdit(f));
+            SaveCommand = new RelayCommand<Farmer>(async f => await Save());
+            DeleteCommand = new RelayCommand<Farmer>(async f => await Delete(f));
+        }
 
         public ObservableCollection<Farmer> Farmers { get; set; }
             = new ObservableCollection<Farmer>();
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string PrimaryPhone { get; set; }
+        public ObservableCollection<CollectionCenter> CollectionCenters { get; set; }
+            = new ObservableCollection<CollectionCenter>();
 
-        public string SecondaryPhone { get; set; }
-        public ICommand UpdateFarmerCommand { get; }
-
-        private Farmer selectedFarmer;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public Farmer SelectedFarmer
+        private Farmer formModel;
+        public Farmer FormModel
         {
-            get => selectedFarmer;
+            get => formModel;
             set
             {
-                selectedFarmer = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(SelectedFarmer)));
+                formModel = value;
+                OnPropertyChanged(nameof(FormModel));
             }
         }
 
-        public FarmerViewModel(IFarmerService service)
+        private bool isPaneOpen;
+        public bool IsPaneOpen
         {
-            _service = service;
+            get => isPaneOpen;
+            set
+            {
+                isPaneOpen = value;
+                OnPropertyChanged(nameof(IsPaneOpen));
+            }
         }
 
+        private bool isEditMode;
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set
+            {
+                isEditMode = value;
+                OnPropertyChanged(nameof(IsEditMode));
+            }
+        }
+
+        public ICommand OpenAddCommand { get; }
+        public ICommand OpenEditCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
+        
         public async Task LoadFarmers()
         {
-            var farmers = await _service.GetFarmers();
+            var farmers = await _farmerService.GetFarmers();
 
             Farmers.Clear();
             foreach (var f in farmers)
                 Farmers.Add(f);
         }
 
-        public async Task AddFarmer()
+        public async Task LoadCollectionCenters()
         {
-            await _service.AddFarmer(new Farmer
+            var centers = await _centerService.GetCollectionCenters();
+
+            CollectionCenters.Clear();
+            foreach (var c in centers)
+                CollectionCenters.Add(c);
+        }
+
+        public async Task Initialize()
+        {
+            await LoadCollectionCenters();
+            await LoadFarmers();
+        }
+
+        private void OpenAdd()
+        {
+            FormModel = new Farmer();
+            IsEditMode = false;
+            IsPaneOpen = true;
+        }
+
+        private void OpenEdit(Farmer farmer)
+        {
+            FormModel = farmer;
+            IsEditMode = true;
+            IsPaneOpen = true;
+        }
+
+        private async Task Save()
+        {
+            if (IsEditMode)
             {
-                FirstName = FirstName,
-                LastName = LastName
-            });
+                await _farmerService.UpdateFarmer(FormModel);
+            }
+            else
+            {
+                await _farmerService.AddFarmer(FormModel);
+            }
 
             await LoadFarmers();
+            IsPaneOpen = false;
         }
 
-        public async Task UpdateFarmer()
+        private async Task Delete(Farmer farmer)
         {
-            await _service.UpdateFarmer(SelectedFarmer);
-            await LoadFarmers();
+            await _farmerService.Delete(farmer.Id);
+            Farmers.Remove(farmer);
         }
 
-        public async Task LoadFarmer(long id)
-        {
-            SelectedFarmer = await _service.GetFarmerById(id);
-        }
-        protected void OnPropertyChanged(string propertyName)
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this,
                 new PropertyChangedEventArgs(propertyName));

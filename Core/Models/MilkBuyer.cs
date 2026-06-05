@@ -10,7 +10,9 @@ namespace Core.Models
     {
         public string Name { get; set; }
 
-        public string ContactPerson { get; set; }
+        public string? ContactPerson { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Address { get; set; }
 
         public ICollection<MilkLoading> Loadings { get; set; }
     }

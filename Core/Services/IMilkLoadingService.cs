@@ -13,5 +13,6 @@ namespace Core.Services
         Task<List<MilkLoading>> GetMilkLoadings();
         Task<MilkLoading> GetMilkLoadingById(long id);
         Task UpdateMilkLoading(MilkLoading milkLoading);
+        Task Delete(long id);
     }
 }

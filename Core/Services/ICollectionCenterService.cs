@@ -6,6 +6,7 @@ namespace Core.Services
     {
         Task AddCollectionCenter(CollectionCenter collectionCenter);
         Task<CollectionCenter> GetCollectionCenterById(long id);
+        Task Delete(long id);
         Task<List<CollectionCenter>> GetCollectionCenters();
         Task UpdateCollectionCenter(CollectionCenter collectionCenter);
     }

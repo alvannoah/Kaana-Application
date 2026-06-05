@@ -31,9 +31,7 @@ namespace Services
             existingRecord.FarmerId = payment.FarmerId;
             existingRecord.CollectionPeriodId = payment.CollectionPeriodId;
             existingRecord.TotalLitres = payment.TotalLitres;
-            existingRecord.RatePerLitre = payment.TotalLitres;
-            existingRecord.GrossAmount = payment.GrossAmount;
-            existingRecord.NetAmount = payment.NetAmount;
+            existingRecord.RatePerLitre = payment.RatePerLitre;
             existingRecord.PaymentDate = payment.PaymentDate;
             existingRecord.TotalDeductions = payment.TotalDeductions;
 
@@ -53,6 +51,24 @@ namespace Services
             }
 
             return await _context.Payments.FindAsync(id);
+        }
+
+        public async Task Delete(long id)
+        {
+            var existingRecord = await _context.Payments.FindAsync(id);
+            if (existingRecord == null)
+            {
+                throw new Exception("Invalid Payment!");
+            }
+            _context.Payments.Remove(existingRecord);
+            await _context.SaveChangesAsync();
+
+        }
+        public async Task<decimal> GetTotalLitresDelivered(long farmerId, long periodId)
+        {
+            return await Task.FromResult((decimal)_context.MilkCollections
+                .Where(mc => mc.FarmerId == farmerId && mc.CollectionPeriodId == periodId)
+                .Sum(mc => (double)mc.Litres)); 
         }
 
     }

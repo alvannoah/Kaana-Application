@@ -9,31 +9,26 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <StackPanel Padding="20">
+        <NavigationView SelectionChanged="NavigationView_SelectionChanged" IsSettingsVisible="False">
 
-            <!-- Input -->
-            <TextBox Header="First Name"
-             Text="{Binding FirstName, Mode=TwoWay}" />
+            <NavigationView.PaneHeader>
+                <TextBlock Text="KAANA DAIRY" Foreground="#2E7D32" FontWeight="Bold" FontFamily="Franklin Gothic Medium" FontSize="30"/>
+            </NavigationView.PaneHeader>
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Dashboard" Icon="Home" Tag="DashBoard" IsSelected="True" />
+                <NavigationViewItem Content="Collection Centers" Icon="Street" Tag="CollectionCenters"/>
+                <NavigationViewItem Content="Milk Collections" Icon="Play" Tag="MilkCollections"/>
+                <NavigationViewItem Content="Farmers" Icon="People" Tag="Farmers"/>
+                <NavigationViewItem Content="Payments" Icon="Calculator" Tag="Payments"/>
+                <NavigationViewItem Content="Expenses" Icon="Shop" Tag="Expenses" />
+                <NavigationViewItem Content="Advance Payments (Loans)" Icon="Calculator" Tag="AdvancePayments"/>
+                <NavigationViewItem Content="Reports" Icon="BrowsePhotos" Tag="Reports"/>
+                <NavigationViewItem Content="Milk Buyers" Icon="Edit" Tag="MilkBuyers"/>
+                <NavigationViewItem Content="Milk Loadings" Icon="Library" Tag="MilkLoading"/>
+                <NavigationViewItem Content="Periods" Icon="ProtectedDocument" Tag="Periods"/>
+            </NavigationView.MenuItems>
 
-            <TextBox Header="Last Name"
-                     Text="{Binding LastName, Mode=TwoWay}" />
-
-            <!-- Button -->
-            <Button Content="Add Farmer"
-            Click="AddFarmer_Click"/>
-
-            <!-- List -->
-            <ListView ItemsSource="{Binding Farmers}" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" >
-                            <TextBlock Text="{Binding FirstName}" />
-                            <TextBlock Margin="10 0 0 0" Text="{Binding LastName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-        </StackPanel>
+            <Frame x:Name="Frame"/>
+        </NavigationView>
     </Grid>
 </Page>

@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 namespace Frontend.ViewModels
 {
+
     public class CollectionCenterViewModel : INotifyPropertyChanged
     {
         private readonly ICollectionCenterService _service;
@@ -14,70 +15,103 @@ namespace Frontend.ViewModels
         public ObservableCollection<CollectionCenter> CollectionCenters { get; set; }
             = new ObservableCollection<CollectionCenter>();
 
-        public string Name { get; set; }
-        public string Location { get; set; }
-        public string PhoneNumber { get; set; }
-        public string ManagerName { get; set; }
-        public bool IsActive { get; set; } = true;
-        public ICommand UpdateCollectionCenterCommand { get; }
+        public CollectionCenter FormModel { get; set; } = new CollectionCenter();
 
-        private CollectionCenter selectedCollectionCenter;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public CollectionCenter SelectedCollectionCenter
+        private bool isEditMode;
+        public bool IsEditMode
         {
-            get => selectedCollectionCenter;
+            get => isEditMode;
             set
             {
-                selectedCollectionCenter = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(SelectedCollectionCenter)));
+                isEditMode = value;
+                OnPropertyChanged(nameof(IsEditMode));
             }
         }
+
+        private bool isPaneOpen;
+        public bool IsPaneOpen
+        {
+            get => isPaneOpen;
+            set
+            {
+                isPaneOpen = value;
+                OnPropertyChanged(nameof(IsPaneOpen));
+            }
+        }
+
+        public ICommand OpenAddCommand { get; }
+        public ICommand OpenEditCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         public CollectionCenterViewModel(ICollectionCenterService service)
         {
             _service = service;
+
+            OpenAddCommand = new RelayCommand<CollectionCenter>(async c => OpenAdd());
+            OpenEditCommand = new RelayCommand<CollectionCenter>(async c => OpenEdit(c));
+            SaveCommand = new RelayCommand<CollectionCenter>(async c => await Save());
+            DeleteCommand = new RelayCommand<CollectionCenter>(async c => await Delete(c));
         }
 
-        public async Task LoadCollectionCenters()
+        private void OpenAdd()
         {
-            var CollectionCenters = await _service.GetCollectionCenters();
+            FormModel = new CollectionCenter();
+            IsEditMode = false;
+            IsPaneOpen = true;
+            OnPropertyChanged(nameof(FormModel));
+        }
+
+        private void OpenEdit(CollectionCenter center)
+        {
+            FormModel = center;
+            IsEditMode = true;
+            IsPaneOpen = true;
+            OnPropertyChanged(nameof(FormModel));
+        }
+
+        private async Task Save()
+        {
+            if (IsEditMode)
+            {
+                await _service.UpdateCollectionCenter(FormModel);
+            }
+            else
+            {
+                await _service.AddCollectionCenter(FormModel);
+            }
+
+            await Load();
+            IsPaneOpen = false;
+        }
+
+        private async Task Delete(CollectionCenter center)
+        {
+            await _service.Delete(center.Id);
+            CollectionCenters.Remove(center);
+        }
+
+        public async Task Load()
+        {
+            var data = await _service.GetCollectionCenters();
 
             CollectionCenters.Clear();
-            foreach (var f in CollectionCenters)
-                CollectionCenters.Add(f);
+            foreach (var item in data)
+                CollectionCenters.Add(item);
         }
 
-        public async Task AddCollectionCenter()
+        public async Task LoadById(long id)
         {
-            await _service.AddCollectionCenter(new CollectionCenter
+            var center = await _service.GetCollectionCenterById(id);
+            if (center != null)
             {
-                Name = Name,
-                Location = Location,
-                PhoneNumber = PhoneNumber,
-                ManagerName = ManagerName,
-                IsActive = IsActive
-            });
-
-            await LoadCollectionCenters();
+                FormModel = center;
+                OnPropertyChanged(nameof(FormModel));
+            }
         }
 
-        public async Task UpdateCollectionCenter()
-        {
-            await _service.UpdateCollectionCenter(SelectedCollectionCenter);
-            await LoadCollectionCenters();
-        }
-
-        public async Task LoadCollectionCenter(long id)
-        {
-            SelectedCollectionCenter = await _service.GetCollectionCenterById(id);
-        }
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this,
-                new PropertyChangedEventArgs(propertyName));
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string name)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

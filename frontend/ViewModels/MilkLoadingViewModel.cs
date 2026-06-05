@@ -11,88 +11,138 @@ namespace Frontend.ViewModels
     public class MilkLoadingViewModel : INotifyPropertyChanged
     {
         private readonly IMilkLoadingService _service;
+        private readonly IMilkBuyerService _milkBuyerService;
 
-        public ObservableCollection<MilkLoading> MilkLoadings { get; set; }
-            = new ObservableCollection<MilkLoading>();
-
-
-        public DateTime Date { get; set; }
-
-        public long MilkBuyerId { get; set; }
-
-        public string VehicleNumber { get; set; }
-
-        public string ReceiverName { get; set; }
-
-        public decimal LitresLoaded { get; set; }
-
-        public decimal PricePerLitre { get; set; }
-
-        public decimal Amount { get; set; }
-
-        public decimal CollectedLitres { get; set; }
-
-        public decimal Variance { get; set; }
-
-        public ICommand UpdateMilkLoadingCommand { get; }
-
-        private MilkLoading selectedMilkLoading;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public MilkLoading SelectedMilkLoading
+        public MilkLoadingViewModel(IMilkLoadingService service, IMilkBuyerService milkBuyerService)
         {
-            get => selectedMilkLoading;
+            _service = service;
+            _milkBuyerService = milkBuyerService;
+            FormModel = new MilkLoading
+            {
+                Date = DateTime.Now
+            };
+
+            OpenAddCommand = new RelayCommand<object>(async m => OpenAdd());
+            OpenEditCommand = new RelayCommand<MilkLoading>(async m => OpenEdit(m));
+            SaveCommand = new RelayCommand<object>(async _ => await Save());
+            DeleteCommand = new RelayCommand<MilkLoading>(async m => await Delete(m));
+        }
+
+        public ObservableCollection<MilkLoading> MilkLoadings { get; }
+            = new ObservableCollection<MilkLoading>();
+        public ObservableCollection<MilkBuyer> MilkBuyers { get; }
+            = new ObservableCollection<MilkBuyer>();
+
+        private MilkLoading formModel;
+        public MilkLoading FormModel
+        {
+            get => formModel;
             set
             {
-                selectedMilkLoading = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(SelectedMilkLoading)));
+                formModel = value;
+                OnPropertyChanged(nameof(FormModel));
             }
         }
 
-        public MilkLoadingViewModel(IMilkLoadingService service)
+        private bool isPaneOpen;
+        public bool IsPaneOpen
         {
-            _service = service;
+            get => isPaneOpen;
+            set
+            {
+                isPaneOpen = value;
+                OnPropertyChanged(nameof(IsPaneOpen));
+            }
+        }
+
+        private bool isEditMode;
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set
+            {
+                isEditMode = value;
+                OnPropertyChanged(nameof(IsEditMode));
+            }
+        }
+
+        public ICommand OpenAddCommand { get; }
+        public ICommand OpenEditCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
+
+        public async Task Initialize()
+        {
+            await LoadMilkLoadings();
+            await LoadMilkBuyers();
         }
 
         public async Task LoadMilkLoadings()
         {
-            var MilkLoadings = await _service.GetMilkLoadings();
+            var data = await _service.GetMilkLoadings();
 
             MilkLoadings.Clear();
-            foreach (var f in MilkLoadings)
-                MilkLoadings.Add(f);
+            foreach (var item in data)
+                MilkLoadings.Add(item);
         }
 
-        public async Task AddMilkLoading()
+        public async Task LoadMilkBuyers()
         {
-            await _service.AddMilkLoading(new MilkLoading
+            var data = await _milkBuyerService.GetMilkBuyers();
+            MilkBuyers.Clear();
+            foreach (var item in data)
+                MilkBuyers.Add(item);
+        }
+
+
+        private void OpenAdd()
+        {
+            FormModel = new MilkLoading
             {
-                Date = Date,
-                MilkBuyerId = MilkBuyerId,
-                VehicleNumber = VehicleNumber,
-                ReceiverName = ReceiverName,
-                LitresLoaded = LitresLoaded,
-                PricePerLitre = PricePerLitre,
-                Amount = Amount,
-                CollectedLitres = CollectedLitres,
-                Variance = Variance,
-            });
+                Date = DateTime.Now
+            };
+
+            IsEditMode = false;
+            IsPaneOpen = true;
+        }
+
+        private void OpenEdit(MilkLoading model)
+        {
+            if (model == null)
+                return;
+
+            FormModel = model;
+
+            IsEditMode = true;
+            IsPaneOpen = true;
+        }
+
+        private async Task Save()
+        {
+            if (IsEditMode)
+            {
+                await _service.UpdateMilkLoading(FormModel);
+            }
+            else
+            {
+                await _service.AddMilkLoading(FormModel);
+            }
 
             await LoadMilkLoadings();
+            IsPaneOpen = false;
         }
 
-        public async Task UpdateMilkLoading()
+        private async Task Delete(MilkLoading model)
         {
-            await _service.UpdateMilkLoading(SelectedMilkLoading);
-            await LoadMilkLoadings();
+            if (model == null)
+                return;
+
+            await _service.Delete(model.Id);
+            MilkLoadings.Remove(model);
         }
 
-        public async Task LoadMilkLoading(long id)
-        {
-            SelectedMilkLoading = await _service.GetMilkLoadingById(id);
-        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this,

@@ -19,7 +19,7 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.Advance", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -27,6 +27,7 @@ namespace Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -41,9 +42,6 @@ namespace Database.Migrations
                     b.Property<long>("FarmerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsSettled")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -51,11 +49,11 @@ namespace Database.Migrations
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
+                    b.Property<decimal>("RepaidAmount")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -65,59 +63,14 @@ namespace Database.Migrations
                     b.ToTable("Advances");
                 });
 
-            modelBuilder.Entity("Core.Models.AdvanceDeduction", b =>
-                {
-                    b.Property<long?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("AdvanceId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("AmountDeducted")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("PaymentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("RecordStatus")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvanceId");
-
-                    b.HasIndex("PaymentId");
-
-                    b.ToTable("AdvanceDeductions");
-                });
-
             modelBuilder.Entity("Core.Models.CollectionCenter", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -148,11 +101,8 @@ namespace Database.Migrations
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -162,11 +112,12 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.CollectionPeriod", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -181,17 +132,21 @@ namespace Database.Migrations
                     b.Property<bool>("IsClosed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("RecordStatus")
+                    b.Property<bool>("IsProcessed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("RecordStatus")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -201,7 +156,7 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.Expense", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -211,7 +166,11 @@ namespace Database.Migrations
                     b.Property<long?>("CollectionCenterId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long>("CollectionPeriodId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -224,33 +183,30 @@ namespace Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Quantity")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CollectionCenterId");
 
+                    b.HasIndex("CollectionPeriodId");
+
                     b.ToTable("Expenses");
                 });
 
             modelBuilder.Entity("Core.Models.Farmer", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -258,6 +214,7 @@ namespace Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -284,11 +241,8 @@ namespace Database.Migrations
                     b.Property<string>("SecondaryPhone")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -300,18 +254,21 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.MilkBuyer", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
 
                     b.Property<long?>("CollectionCenterId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ContactPerson")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -324,14 +281,14 @@ namespace Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -343,14 +300,24 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.MilkCollection", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("BuyingPricePerLitre")
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("CollectionCenterId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CollectionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CollectionPeriodId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -362,22 +329,21 @@ namespace Database.Migrations
                     b.Property<long>("FarmerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Quantity")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("Litres")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CollectionCenterId");
+
+                    b.HasIndex("CollectionPeriodId");
 
                     b.HasIndex("FarmerId");
 
@@ -386,17 +352,15 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.MilkLoading", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("CollectedLitres")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -424,14 +388,8 @@ namespace Database.Migrations
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Variance")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VehicleNumber")
@@ -447,7 +405,7 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.Payment", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -455,6 +413,7 @@ namespace Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -466,14 +425,11 @@ namespace Database.Migrations
                     b.Property<long>("FarmerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("GrossAmount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("NetAmount")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("PaymentType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("RatePerLitre")
                         .HasColumnType("TEXT");
@@ -481,17 +437,17 @@ namespace Database.Migrations
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
+                    b.Property<string>("ReferenceNumber")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("TotalDeductions")
+                    b.Property<decimal?>("TotalDeductions")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("TotalLitres")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -503,94 +459,14 @@ namespace Database.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("Core.Models.PaymentDeduction", b =>
-                {
-                    b.Property<long?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("PaymentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("RecordStatus")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PaymentId");
-
-                    b.ToTable("PaymentDeductions");
-                });
-
-            modelBuilder.Entity("Core.Models.PeriodBalance", b =>
-                {
-                    b.Property<long?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("CollectionPeriodId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("FarmerId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("RecordStatus")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("TotalLitres")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PeriodBalances");
-                });
-
             modelBuilder.Entity("Core.Models.User", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
@@ -618,11 +494,8 @@ namespace Database.Migrations
                     b.Property<int?>("RecordStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -641,30 +514,19 @@ namespace Database.Migrations
                     b.Navigation("Farmer");
                 });
 
-            modelBuilder.Entity("Core.Models.AdvanceDeduction", b =>
-                {
-                    b.HasOne("Core.Models.Advance", "Advance")
-                        .WithMany()
-                        .HasForeignKey("AdvanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Models.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advance");
-
-                    b.Navigation("Payment");
-                });
-
             modelBuilder.Entity("Core.Models.Expense", b =>
                 {
                     b.HasOne("Core.Models.CollectionCenter", null)
                         .WithMany("Expenses")
                         .HasForeignKey("CollectionCenterId");
+
+                    b.HasOne("Core.Models.CollectionPeriod", "CollectionPeriod")
+                        .WithMany("Expenses")
+                        .HasForeignKey("CollectionPeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CollectionPeriod");
                 });
 
             modelBuilder.Entity("Core.Models.Farmer", b =>
@@ -693,6 +555,12 @@ namespace Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Models.CollectionPeriod", "CollectionPeriod")
+                        .WithMany("MilkCollections")
+                        .HasForeignKey("CollectionPeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Core.Models.Farmer", "Farmer")
                         .WithMany("MilkCollections")
                         .HasForeignKey("FarmerId")
@@ -700,6 +568,8 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.Navigation("CollectionCenter");
+
+                    b.Navigation("CollectionPeriod");
 
                     b.Navigation("Farmer");
                 });
@@ -734,17 +604,6 @@ namespace Database.Migrations
                     b.Navigation("Farmer");
                 });
 
-            modelBuilder.Entity("Core.Models.PaymentDeduction", b =>
-                {
-                    b.HasOne("Core.Models.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Payment");
-                });
-
             modelBuilder.Entity("Core.Models.CollectionCenter", b =>
                 {
                     b.Navigation("Expenses");
@@ -758,6 +617,10 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Core.Models.CollectionPeriod", b =>
                 {
+                    b.Navigation("Expenses");
+
+                    b.Navigation("MilkCollections");
+
                     b.Navigation("Payments");
                 });
 

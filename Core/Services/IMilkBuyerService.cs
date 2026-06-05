@@ -13,5 +13,6 @@ namespace Core.Services
         Task<List<MilkBuyer>> GetMilkBuyers();
         Task<MilkBuyer> GetMilkBuyerById(long id);
         Task UpdateMilkBuyer(MilkBuyer milkBuyer);
+        Task Delete(long id);
     }
 }

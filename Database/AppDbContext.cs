@@ -14,13 +14,10 @@ namespace Database
         public DbSet<CollectionCenter> CollectionCenters { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<PaymentDeduction> PaymentDeductions { get; set; }
         public DbSet<MilkLoading> MilkLoadings { get; set; }
         public DbSet<MilkBuyer> MilkBuyers{ get; set; }
         public DbSet<CollectionPeriod> CollectionPeriods { get; set; }
-        public DbSet<AdvanceDeduction> AdvanceDeductions { get; set; }
         public DbSet<Advance> Advances { get; set; }
-        public DbSet<PeriodBalance> PeriodBalances { get; set; }
         public DbSet<User> Users { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -51,10 +48,12 @@ namespace Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<MilkCollection>()
                 .HasOne(mc => mc.Farmer)
                 .WithMany(f => f.MilkCollections)
                 .HasForeignKey(mc => mc.FarmerId);
+
 
             modelBuilder.Entity<MilkCollection>()
                 .HasOne(mc => mc.CollectionCenter)
@@ -65,6 +64,12 @@ namespace Database
                 .HasOne(f => f.CollectionCenter)
                 .WithMany(cc => cc.Farmers)
                 .HasForeignKey(f => f.CollectionCenterId);
+
+            modelBuilder.Entity<MilkCollection>()
+                .HasOne(mc => mc.CollectionPeriod)
+                .WithMany(cp => cp.MilkCollections)
+                .HasForeignKey(mc => mc.CollectionPeriodId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -27,12 +27,12 @@ namespace Services
             {
                 throw new Exception("Invalid person");
             }
-          
+
             existingFarmer.FirstName = farmer.FirstName;
             existingFarmer.LastName = farmer.LastName;
             existingFarmer.Email = farmer.Email;
             existingFarmer.PrimaryPhone = farmer.PrimaryPhone;
-            existingFarmer.SecondaryPhone = farmer.SecondaryPhone;            
+            existingFarmer.SecondaryPhone = farmer.SecondaryPhone;
 
             await _context.SaveChangesAsync();
         }
@@ -44,7 +44,7 @@ namespace Services
 
         public async Task<Farmer> GetFarmerById(long id)
         {
-            if (id is 0 )
+            if (id is 0)
             {
                 throw new Exception("Invalid Id");
             }
@@ -52,5 +52,16 @@ namespace Services
             return await _context.Farmers.FindAsync(id);
         }
 
+        public async Task Delete(long id)
+        {
+            var farmer = await _context.Farmers.FindAsync(id);
+            if (farmer == null)
+            {
+                throw new Exception("Invalid Id");
+            }
+            _context.Farmers.Remove(farmer);
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

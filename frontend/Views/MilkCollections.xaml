@@ -1,0 +1,165 @@
+﻿<Page
+    x:Class="Frontend.Views.MilkCollections"
+    x:Name="RootPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:Core.Models"
+    xmlns:local="using:Frontend.Views"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <local:BoolToTitleConverter x:Key="BoolToTitleConverter"/>
+        <local:StringToDecimalConverter x:Key="DecimalConverter"/>
+    </Page.Resources>
+
+    <SplitView
+        IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay}"
+        DisplayMode="Overlay"
+        PanePlacement="Right"
+        OpenPaneLength="420">
+        <SplitView.Pane>
+            <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" Padding="20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="12">
+
+                        <TextBlock Text="{Binding IsEditMode, Converter={StaticResource BoolToTitleConverter}}"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="#4CAF50"/>
+
+                        <ComboBox Header="Farmer"
+                          HorizontalAlignment="Stretch"
+                          ItemsSource="{Binding Farmers}"
+                          SelectedValue="{Binding FormModel.FarmerId, Mode=TwoWay}"
+                          SelectedValuePath="Id"
+                          DisplayMemberPath="FirstName" />
+
+                        <ComboBox Header="Collection Center"
+                          HorizontalAlignment="Stretch"
+                          ItemsSource="{Binding CollectionCenters}"
+                          SelectedValue="{Binding FormModel.CollectionCenterId, Mode=TwoWay}"
+                          SelectedValuePath="Id"
+                          DisplayMemberPath="Name" />
+
+                        <DatePicker Header="Collection Date"
+                            HorizontalAlignment="Stretch"
+                            Date="{Binding FormModel.CollectionDate, Mode=TwoWay}"/>
+
+                        <TextBox Header="Quantity (Litres)"
+         InputScope="Number"
+         Text="{Binding FormModel.Litres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalConverter}}" />
+
+                        <TextBox Header="Buying Price Per Litre ($)"
+         InputScope="Number"
+         Text="{Binding FormModel.BuyingPricePerLitre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalConverter}}" />
+
+                        <StackPanel Margin="0,5,0,10">
+                            <TextBlock Text="Total Amount To Pay" FontSize="11" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding FormModel.Amount}" 
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="#4CAF50"/>
+                        </StackPanel>
+
+                        <Button Content="Save Collection"
+                        HorizontalAlignment="Stretch"
+                        Height="40"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        Command="{Binding SaveCommand}" />
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </SplitView.Pane>
+
+        <SplitView.Content>
+            <StackPanel Padding="20" Spacing="10">
+
+                <Grid Margin="0,0,0,10">
+                    <TextBlock Text="Milk Collections"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+
+                    <Button Content="+ Add Collection"
+                            HorizontalAlignment="Right"
+                            Background="#4CAF50"
+                            Foreground="White"
+                            Command="{Binding OpenAddCommand}" />
+                </Grid>
+
+                <Grid Background="#F5F5F5" Padding="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Farmer" FontWeight="SemiBold"/>
+                    <TextBlock Text="Center" Grid.Column="1" FontWeight="SemiBold"/>
+                    <TextBlock Text="Date" Grid.Column="2" FontWeight="SemiBold"/>
+                    <TextBlock Text="Litres" Grid.Column="3" FontWeight="SemiBold"/>
+                    <TextBlock Text="Price" Grid.Column="4" FontWeight="SemiBold"/>
+                    <TextBlock Text="Amount" Grid.Column="5" FontWeight="SemiBold"/>
+                    <TextBlock Text="Actions" Grid.Column="6" FontWeight="SemiBold"/>
+                </Grid>
+
+                <ListView ItemsSource="{Binding MilkCollections}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:MilkCollection">
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{x:Bind Farmer.FirstName}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind Farmer.LastName}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="{x:Bind CollectionCenter.Name}" Grid.Column="1" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind local:MilkCollections.FormatShortDate(CollectionDate)}" Grid.Column="2" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind Litres}" Grid.Column="3" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind BuyingPricePerLitre}" Grid.Column="4" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind Amount}" Grid.Column="5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+
+                                <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                    <Button Content="Edit"
+                                            Background="#FFC107"
+                                            Foreground="Black"
+                                            Command="{Binding DataContext.OpenEditCommand, ElementName=RootPage}"
+                                            CommandParameter="{x:Bind}" />
+
+                                    <Button Content="Delete"
+                                            Background="#F44336"
+                                            Foreground="White"
+                                            Command="{Binding DataContext.DeleteCommand, ElementName=RootPage}"
+                                            CommandParameter="{x:Bind}" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </StackPanel>
+        </SplitView.Content>
+    </SplitView>
+</Page>

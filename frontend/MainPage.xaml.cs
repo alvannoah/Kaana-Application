@@ -1,9 +1,13 @@
 ﻿using Core.Models;
 using Frontend;
 using Frontend.ViewModels;
+using Frontend.Views;
+using Frontend.Views.CollectionCenterViews;
 using Microsoft.Extensions.DependencyInjection;
+using System.Data;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using MilkLoading = Frontend.Views.MilkLoading;
 
 namespace frontend
 {
@@ -12,27 +16,61 @@ namespace frontend
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public FarmerViewModel ViewModel { get; }
 
         public MainPage()
         {
             InitializeComponent();
-
-            ViewModel = App.Services.GetRequiredService<FarmerViewModel>();
-
-            this.DataContext = ViewModel;
-            _ = ViewModel.LoadFarmers();
+            Frame.Navigate(typeof(DashBoard));
         }
 
-        private async void AddFarmer_Click(object sender, RoutedEventArgs e)
+        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            await ViewModel.AddFarmer();
-        }
+            if (args.SelectedItem is NavigationViewItem item)
+            {
+                string tag = item.Tag.ToString();
 
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var farmer = (Farmer)e.ClickedItem;
-            Frame.Navigate(typeof(ModifierFarmer), farmer.Id);
+                switch (tag)
+                {
+                    case "DashBoard":
+                        Frame.Navigate(typeof(DashBoard));
+                        break;
+
+                    case "Expenses":
+                        Frame.Navigate(typeof(Expenses));
+                        break;
+
+                    case "MilkCollections":
+                        Frame.Navigate(typeof(MilkCollections));
+                        break;
+
+                    case "Farmers":
+                        Frame.Navigate(typeof(Farmers));
+                        break;
+
+                    case "CollectionCenters":
+                        Frame.Navigate(typeof(CollectionCenterView));
+                        break;
+                    case "MilkBuyers":
+                        Frame.Navigate(typeof(MilkBuyers));
+                        break;
+                    case "MilkLoading":
+                        Frame.Navigate(typeof(MilkLoading));
+                        break;
+                    case "Payments":
+                        Frame.Navigate(typeof(Payments));
+                        break;
+                    case "Periods":
+                        Frame.Navigate(typeof(CollectionPeriods));
+                        break;
+                    case "Reports":
+                        Frame.Navigate(typeof(FarmerReportPage));
+                        break;
+                    case "AdvancePayments":
+                        Frame.Navigate(typeof(AdvancePayments));
+                        break;
+
+                }
+            }
         }
     }
 }

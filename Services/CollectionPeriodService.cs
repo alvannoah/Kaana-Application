@@ -14,41 +14,93 @@ namespace Services
             _context = context;
         }
 
-        public async Task AddCollectionPeriod(CollectionPeriod collectionPeriod)
+        public CollectionPeriod CreatePeriod(DateTime start, DateTime end)
         {
-            _context.CollectionPeriods.Add(collectionPeriod);
-            await _context.SaveChangesAsync();
+            var period = new CollectionPeriod
+            {
+                StartDate = start,
+                EndDate = end,
+                IsClosed = false
+            };
+
+            _context.CollectionPeriods.Add(period);
+            _context.SaveChangesAsync();
+
+            return period;
         }
 
-        public async Task UpdateCollectionPeriod(CollectionPeriod collectionPeriod)
+        public async Task<List<CollectionPeriod>> GetAll()
         {
-            var existingRecord = await _context.CollectionPeriods.FindAsync(collectionPeriod.Id);
-            if (existingRecord == null)
+            return _context.CollectionPeriods
+                .OrderByDescending(p => p.StartDate)
+                .ToList();
+        }
+
+        public CollectionPeriod GetCurrentPeriod(DateTime date)
+        {
+            var period = _context.CollectionPeriods
+                .FirstOrDefault(p => date >= p.StartDate && date <= p.EndDate);
+
+            if (period != null)
             {
-                throw new Exception("Invalid collection period!");
+                return period;
             }
 
-            existingRecord.StartDate = collectionPeriod.StartDate;
-            existingRecord.EndDate = collectionPeriod.EndDate;
-            existingRecord.IsClosed = collectionPeriod.IsClosed;
+            DateTime startDate;
+            DateTime endDate;
+            string periodName;
 
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<List<CollectionPeriod>> GetCollectionPeriods()
-        {
-            return await _context.CollectionPeriods.ToListAsync();
-        }
-
-        public async Task<CollectionPeriod> GetCollectionPeriodById(long id)
-        {
-            if (id is 0)
+            if (date.Day <= 15)
             {
-                throw new Exception("Invalid Id");
+                startDate = new DateTime(date.Year, date.Month, 1);
+                endDate = new DateTime(date.Year, date.Month, 15);
+                periodName = date.ToString("yyyy-MM") + " (1st - 15th)";
+            }
+            else
+            {
+                startDate = new DateTime(date.Year, date.Month, 16);
+                endDate = new DateTime(date.Year, date.Month, 1).AddMonths(1).AddDays(-1);
+                periodName = date.ToString("yyyy-MM") + " (16th - End)";
             }
 
-            return await _context.CollectionPeriods.FindAsync(id);
+            var newPeriod = new CollectionPeriod
+            {
+                Name = periodName,
+                StartDate = startDate,
+                EndDate = endDate,
+                IsClosed = false
+            };
+
+            _context.CollectionPeriods.Add(newPeriod);
+            _context.SaveChangesAsync();
+
+            return newPeriod;
         }
 
+        public async Task ClosePeriod(long periodId)
+        {
+            var period = _context.CollectionPeriods
+                .FirstOrDefault(p => p.Id == periodId);
+
+            if (period == null)
+                throw new Exception("Period not found");
+
+            period.IsClosed = true;
+
+            _context.SaveChangesAsync();
+        }
+        public async Task<OperationResult> EnsurePeriodIsOpen(long periodId)
+        {
+            var period = await _context.CollectionPeriods
+                .FirstOrDefaultAsync(x => x.Id == periodId);
+
+            if (period == null)
+                return OperationResult.Fail("Period not found");
+
+            if (period.IsClosed)
+                return OperationResult.Fail("This period is closed.");
+
+            return OperationResult.Ok();
+        }
     }
 }

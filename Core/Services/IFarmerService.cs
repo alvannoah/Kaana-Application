@@ -13,5 +13,6 @@ namespace Core.Services
         Task<Farmer> GetFarmerById(long id);
         Task<List<Farmer>> GetFarmers();
         Task UpdateFarmer(Farmer farmer);
+        Task Delete(long id);
     }
 }

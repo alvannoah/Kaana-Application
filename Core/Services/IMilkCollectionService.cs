@@ -13,5 +13,6 @@ namespace Core.Services
         Task<List<MilkCollection>> GetMilkCollections();
         Task<MilkCollection> GetMilkCollectionById(long id);
         Task UpdateMilkCollection(MilkCollection farmer);
+        Task Delete(long id);
     }
 }

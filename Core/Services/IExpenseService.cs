@@ -13,5 +13,6 @@ namespace Core.Services
         Task<List<Expense>> GetExpenses();
         Task<Expense> GetExpenseById(long id);
         Task UpdateExpense(Expense expense);
+        Task Delete(long id);
     }
 }

@@ -5,7 +5,6 @@ using Frontend.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Services;
-using Services.Services;
 using System;
 using System.IO;
 using Windows.ApplicationModel;
@@ -53,20 +52,18 @@ namespace frontend
 
             services.AddScoped<IFarmerService, FarmerService>();
             services.AddScoped<IAdvanceService, AdvanceService>();
-            services.AddScoped<IAdvanceDeductionService, AdvanceDeductionService>();
             services.AddScoped<ICollectionCenterService, CollectionCenterService>();
             services.AddScoped<ICollectionPeriodService, CollectionPeriodService>();
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<IMilkBuyerService, MilkBuyerService>();
             services.AddScoped<IMilkCollectionService, MilkCollectionService>();
             services.AddScoped<IMilkLoadingService, MilkLoadingService>();
-            services.AddScoped<IPaymentDeductionService, PaymentDeductionService>();
             services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IPeriodBalanceService, PeriodBalanceService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IDashBoardService, DashboardService>();
 
             services.AddTransient<FarmerViewModel>();
-            services.AddTransient<AdvanceDeductionViewModel>();
             services.AddTransient<AdvanceViewModel>();
             services.AddTransient<CollectionCenterViewModel>();
             services.AddTransient<CollectionPeriodViewModel>();
@@ -74,10 +71,10 @@ namespace frontend
             services.AddTransient<MilkBuyerViewModel>();
             services.AddTransient<MilkCollectionViewModel>();
             services.AddTransient<MilkLoadingViewModel>();
-            services.AddTransient<PaymentDeductionViewModel>();
             services.AddTransient<PaymentViewModel>();
-            services.AddTransient<PeriodBalanceViewModel>();
             services.AddTransient<UserViewModel>();
+            services.AddTransient<FarmerReportViewModel>();
+            services.AddTransient<DashboardViewModel>();
 
             Services = services.BuildServiceProvider();
 

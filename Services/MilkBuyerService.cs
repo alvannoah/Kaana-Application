@@ -30,6 +30,8 @@ namespace Services
 
             existingRecord.Name = milkBuyer.Name;
             existingRecord.ContactPerson = milkBuyer.ContactPerson;
+            existingRecord.PhoneNumber = milkBuyer.PhoneNumber;
+            existingRecord.Address = milkBuyer.Address;
 
             await _context.SaveChangesAsync();
         }
@@ -47,6 +49,17 @@ namespace Services
             }
 
             return await _context.MilkBuyers.FindAsync(id);
+        }
+
+        public async Task Delete(long id)
+        {
+            var record = await _context.MilkBuyers.FindAsync(id);
+            if (record == null)
+            {
+                throw new Exception("Invalid Milk Buyer!");
+            }
+            _context.MilkBuyers.Remove(record);
+            await _context.SaveChangesAsync();
         }
 
     }

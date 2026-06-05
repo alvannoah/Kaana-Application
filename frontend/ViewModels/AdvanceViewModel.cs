@@ -10,74 +10,163 @@ namespace Frontend.ViewModels
 {
     public class AdvanceViewModel : INotifyPropertyChanged
     {
-        private readonly IAdvanceService _service;
+        private readonly IAdvanceService _advanceService;
+        private readonly IFarmerService _farmerService;
 
-        public ObservableCollection<Advance> Advances { get; set; }
+        public AdvanceViewModel(IAdvanceService advanceService, IFarmerService farmerService)
+        {
+            _advanceService = advanceService;
+            _farmerService = farmerService;
+            FormModel = new Advance
+            {
+                DateIssued = DateTime.Now
+            };
+
+            OpenAddCommand = new RelayCommand<object>(async m => OpenAdd());
+            OpenEditCommand = new RelayCommand<Advance>(async a => OpenEdit(a));
+            SaveCommand = new RelayCommand<object>(async _ => await Save());
+            DeleteCommand = new RelayCommand<Advance>(async a => await Delete(a));
+        }
+
+        public ObservableCollection<Advance> Advances { get; }
             = new ObservableCollection<Advance>();
-        public long FarmerId { get; set; }
-        public DateTime DateIssued { get; set; }
-        public decimal Amount { get; set; }
-        public string Notes { get; set; }
-        public bool IsSettled { get; set; }
-        public ICommand UpdateFarmerCommand { get; }
+        public ObservableCollection<Farmer> Farmers { get; }
+            = new ObservableCollection<Farmer>();
+
+        private Advance formModel;
+        public Advance FormModel
+        {
+            get => formModel;
+            set
+            {
+                formModel = value;
+                OnPropertyChanged(nameof(FormModel));
+            }
+        }
 
         private Advance selectedAdvance;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         public Advance SelectedAdvance
         {
             get => selectedAdvance;
             set
             {
                 selectedAdvance = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(SelectedAdvance)));
+                OnPropertyChanged(nameof(SelectedAdvance));
             }
         }
 
-        public AdvanceViewModel(IAdvanceService service)
+        private bool isPaneOpen;
+        public bool IsPaneOpen
         {
-            _service = service;
+            get => isPaneOpen;
+            set
+            {
+                isPaneOpen = value;
+                OnPropertyChanged(nameof(IsPaneOpen));
+            }
+        }
+
+        private bool isEditMode;
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set
+            {
+                isEditMode = value;
+                OnPropertyChanged(nameof(IsEditMode));
+            }
+        }
+
+        public ICommand OpenAddCommand { get; }
+        public ICommand OpenEditCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
+        
+        public async Task Initialize()
+        {
+            await LoadFarmers();
+            await LoadAdvances();
         }
 
         public async Task LoadAdvances()
         {
-            var farmers = await _service.GetAdvances();
+            var data = await _advanceService.GetAdvances();
 
             Advances.Clear();
-            foreach (var f in farmers)
-                Advances.Add(f);
+            foreach (var item in data)
+                Advances.Add(item);
         }
 
-        public async Task AddFarmer()
+        public async Task LoadFarmers()
         {
-            await _service.AddAdvance(new Advance
+            var data = await _farmerService.GetFarmers();
+            Farmers.Clear();
+            foreach (var item in data)
+                Farmers.Add(item);
+        }
+
+        private void OpenAdd()
+        {
+            FormModel = new Advance
             {
-                FarmerId = FarmerId,
-                DateIssued = DateIssued,
-                Amount = Amount,
-                Notes = Notes,
-                IsSettled = IsSettled,
-            });
+                DateIssued = DateTime.Now,
+                RepaidAmount = 0
+            };
+
+            IsEditMode = false;
+            IsPaneOpen = true;
+        }
+
+        private void OpenEdit(Advance advance)
+        {
+            if (advance == null)
+                return;
+
+            FormModel = new Advance
+            {
+                Id = advance.Id,
+                FarmerId = advance.FarmerId,
+                DateIssued = advance.DateIssued,
+                Amount = advance.Amount,
+                RepaidAmount = advance.RepaidAmount,
+                Notes = advance.Notes
+            };
+
+            IsEditMode = true;
+            IsPaneOpen = true;
+        }
+
+        private async Task Save()
+        {
+            if (FormModel.FarmerId <= 0)
+                throw new Exception("Select a farmer");
+
+            if (FormModel.Amount <= 0)
+                throw new Exception("Amount must be greater than zero");
+
+            if (IsEditMode)
+                await _advanceService.UpdateAdvance(FormModel);
+            else
+                await _advanceService.AddAdvance(FormModel);
 
             await LoadAdvances();
+            IsPaneOpen = false;
         }
 
-        public async Task UpdateFarmer()
+        private async Task Delete(Advance advance)
         {
-            await _service.UpdateAdvance(SelectedAdvance);
-            await LoadAdvances();
+            if (advance == null)
+                return;
+
+            await _advanceService.Delete(advance.Id);
+            Advances.Remove(advance);
         }
 
-        public async Task LoadFarmer(long id)
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
         {
-            SelectedAdvance = await _service.GetAdvanceById(id);
-        }
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this,
-                new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

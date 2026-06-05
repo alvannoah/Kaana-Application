@@ -52,5 +52,16 @@ namespace Services
             return await _context.CollectionCenters.FindAsync(id);
         }
 
+        public async Task Delete(long id)
+        {
+            var record = await _context.CollectionCenters.FindAsync(id);
+            if (record == null)
+            {
+                throw new Exception("Invalid collection center!");
+            }
+            _context.CollectionCenters.Remove(record);
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

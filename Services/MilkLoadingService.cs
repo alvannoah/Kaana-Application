@@ -33,9 +33,7 @@ namespace Services
             existingRecord.ReceiverName = milkLoading.ReceiverName;
             existingRecord.LitresLoaded = milkLoading.LitresLoaded;
             existingRecord.PricePerLitre = milkLoading.PricePerLitre;
-            existingRecord.Amount = milkLoading.Amount;
             existingRecord.CollectedLitres = milkLoading.CollectedLitres;
-            existingRecord.Variance = milkLoading.Variance;
 
             await _context.SaveChangesAsync();
         }
@@ -55,5 +53,16 @@ namespace Services
             return await _context.MilkLoadings.FindAsync(id);
         }
 
+        public async Task Delete(long id)
+        {
+            var existingRecord = await _context.MilkLoadings.FindAsync(id);
+            if (existingRecord == null)
+            {
+                throw new Exception("Invalid Milk Loading!");
+            }
+            _context.MilkLoadings.Remove(existingRecord);
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

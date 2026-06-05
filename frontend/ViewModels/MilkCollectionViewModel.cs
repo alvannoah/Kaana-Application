@@ -1,81 +1,212 @@
 ﻿using Core.Models;
 using Core.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Frontend.ViewModels
 {
     public class MilkCollectionViewModel : INotifyPropertyChanged
     {
         private readonly IMilkCollectionService _service;
+        private readonly IFarmerService _farmerService;
+        private readonly ICollectionCenterService _centerService;
+        private readonly ICollectionPeriodService _collectionPeriodService;
+
+        public MilkCollectionViewModel(
+            IMilkCollectionService service,
+            IFarmerService farmerService,
+            ICollectionCenterService centerService,
+            ICollectionPeriodService collectionPeriodService)
+        {
+            _service = service;
+            _farmerService = farmerService;
+            _centerService = centerService;
+            _collectionPeriodService = collectionPeriodService;
+            FormModel = new MilkCollection { CollectionDate = DateTime.Now };
+
+            OpenAddCommand = new RelayCommand<MilkCollection>(async m => OpenAdd());
+            OpenEditCommand = new RelayCommand<MilkCollection>(async m => OpenEdit(m));
+            SaveCommand = new RelayCommand<MilkCollection>(async m => await Save());
+            DeleteCommand = new RelayCommand<MilkCollection>(async m => await Delete(m));
+        }
 
         public ObservableCollection<MilkCollection> MilkCollections { get; set; }
             = new ObservableCollection<MilkCollection>();
 
-        public double Quantity { get; set; }
-        public Farmer Farmer { get; set; }
-        public long FarmerId { get; set; }
-        public long CollectionCenterId { get; set; }
+        public ObservableCollection<Farmer> Farmers { get; set; }
+            = new ObservableCollection<Farmer>();
 
-        public ICommand UpdateMilkCollectionCommand { get; }
+        public ObservableCollection<CollectionCenter> CollectionCenters { get; set; }
+            = new ObservableCollection<CollectionCenter>();
 
-        private MilkCollection selectedMilkCollection;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public MilkCollection SelectedMilkCollection
+        private MilkCollection formModel;
+        public MilkCollection FormModel
         {
-            get => selectedMilkCollection;
+            get => formModel;
             set
             {
-                selectedMilkCollection = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(SelectedMilkCollection)));
+
+                if (formModel != null)
+                    formModel.PropertyChanged -= FormModel_PropertyChanged;
+
+                formModel = value;
+
+                if (formModel != null)
+                    formModel.PropertyChanged += FormModel_PropertyChanged;
+
+                OnPropertyChanged(nameof(FormModel));
             }
         }
 
-        public MilkCollectionViewModel(IMilkCollectionService service)
+        private bool isPaneOpen;
+        public bool IsPaneOpen
         {
-            _service = service;
+            get => isPaneOpen;
+            set
+            {
+                isPaneOpen = value;
+                OnPropertyChanged(nameof(IsPaneOpen));
+            }
+        }
+
+        private bool isEditMode;
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set
+            {
+                isEditMode = value;
+                OnPropertyChanged(nameof(IsEditMode));
+            }
+        }
+
+        public ICommand OpenAddCommand { get; }
+        public ICommand OpenEditCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
+
+        public async Task Initialize()
+        {
+            await LoadMilkCollections();
+            await LoadFarmers();
+            await LoadCollectionCenters();
         }
 
         public async Task LoadMilkCollections()
         {
-            var MilkCollections = await _service.GetMilkCollections();
+            var data = await _service.GetMilkCollections();
 
             MilkCollections.Clear();
-            foreach (var f in MilkCollections)
-                MilkCollections.Add(f);
+            foreach (var item in data)
+                MilkCollections.Add(item);
         }
 
-        public async Task AddMilkCollection()
+        public async Task LoadFarmers()
         {
-            await _service.AddMilkCollection(new MilkCollection
+            var data = await _farmerService.GetFarmers();
+
+            Farmers.Clear();
+            foreach (var item in data)
+                Farmers.Add(item);
+        }
+
+        public async Task LoadCollectionCenters()
+        {
+            var data = await _centerService.GetCollectionCenters();
+
+            CollectionCenters.Clear();
+            foreach (var item in data)
+                CollectionCenters.Add(item);
+        }
+
+        private void OpenAdd()
+        {
+            var period = _collectionPeriodService.GetCurrentPeriod(DateTime.Now);
+
+            if (period == null)
             {
-                Quantity = Quantity,
-                FarmerId = FarmerId,
-                CollectionCenterId = CollectionCenterId,
-            });
+                throw new Exception("No active collection period found.");
+            }
+
+            FormModel = new MilkCollection { 
+                CollectionDate = DateTime.Now,
+                CollectionPeriodId = period.Id
+            };
+            IsEditMode = false;
+            IsPaneOpen = true;
+        }
+
+        private void OpenEdit(MilkCollection model)
+        {
+
+            FormModel = model;
+            IsEditMode = true;
+            IsPaneOpen = true;
+        }
+
+        private async Task Save()
+        {
+            var result = await _collectionPeriodService.EnsurePeriodIsOpen(FormModel.CollectionPeriodId);
+
+            if (!result.Success)
+            {
+                await ShowDialog(result.Message);
+                return;
+            }
+
+            if (IsEditMode)
+                await _service.UpdateMilkCollection(FormModel);
+            else
+                await _service.AddMilkCollection(FormModel);
 
             await LoadMilkCollections();
+            IsPaneOpen = false;
         }
 
-        public async Task UpdateMilkCollection()
+        private async Task Delete(MilkCollection model)
         {
-            await _service.UpdateMilkCollection(SelectedMilkCollection);
-            await LoadMilkCollections();
+            var result = await _collectionPeriodService.EnsurePeriodIsOpen(FormModel.CollectionPeriodId);
+
+            if (!result.Success)
+            {
+                await ShowDialog(result.Message);
+                return;
+            }
+            await _service.Delete(model.Id);
+            MilkCollections.Remove(model);
         }
 
-        public async Task LoadMilkCollection(long id)
+        private void FormModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            SelectedMilkCollection = await _service.GetMilkCollectionById(id);
+
+            if (e.PropertyName == nameof(MilkCollection.Litres) || e.PropertyName == nameof(MilkCollection.BuyingPricePerLitre))
+            {
+
+                OnPropertyChanged($"{nameof(FormModel)}.{nameof(MilkCollection.Amount)}");
+            }
         }
-        protected void OnPropertyChanged(string propertyName)
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string name)
         {
-            PropertyChanged?.Invoke(this,
-                new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private async Task ShowDialog(string message)
+        {
+            var dialog = new ContentDialog
+            {
+                Title = "Warning",
+                Content = message,
+                CloseButtonText = "OK"
+            };
+
+            await dialog.ShowAsync();
         }
     }
 }

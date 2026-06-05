@@ -11,6 +11,7 @@ namespace Core.Models
         
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public string? FullName => $"{FirstName} {LastName}".Trim();
         public string? Email { get; set; }
         public string? PrimaryPhone { get; set; }
 

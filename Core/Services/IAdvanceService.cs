@@ -13,5 +13,6 @@ namespace Core.Services
         Task<Advance> GetAdvanceById(long id);
         Task<List<Advance>> GetAdvances();
         Task UpdateAdvance(Advance advance);
+        Task Delete(long id);
     }
 }

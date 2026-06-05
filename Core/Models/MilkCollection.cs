@@ -1,19 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Core.Models
 {
-    public class MilkCollection : BaseEntity
+    public class MilkCollection : BaseEntity, INotifyPropertyChanged
     {
-        public double Quantity { get; set; }
-        public Farmer Farmer { get; set; }
-
         public long FarmerId { get; set; }
-
-        public CollectionCenter CollectionCenter { get; set; }
         public long CollectionCenterId { get; set; }
+        public DateTime CollectionDate { get; set; }
+
+        public virtual Farmer Farmer { get; set; }
+        public virtual CollectionCenter CollectionCenter { get; set; }
+
+
+        private decimal _litres;
+        public decimal Litres
+        {
+            get => _litres;
+            set
+            {
+                if (_litres != value)
+                {
+                    _litres = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Amount));
+                }
+            }
+        }
+
+        private decimal _buyingPricePerLitre;
+        public decimal BuyingPricePerLitre
+        {
+            get => _buyingPricePerLitre;
+            set
+            {
+                if (_buyingPricePerLitre != value)
+                {
+                    _buyingPricePerLitre = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Amount)); 
+                }
+            }
+        }
+
+        public decimal Amount => Litres * BuyingPricePerLitre;
+
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public long CollectionPeriodId { get; set; }
+        public CollectionPeriod CollectionPeriod { get; set; }
     }
 }

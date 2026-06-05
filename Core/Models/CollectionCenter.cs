@@ -8,7 +8,6 @@ namespace Core.Models
 {
     public class CollectionCenter : BaseEntity
     {
-
         public string Name { get; set; }
 
         public string Location { get; set; }

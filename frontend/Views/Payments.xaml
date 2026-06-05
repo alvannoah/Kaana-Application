@@ -1,0 +1,184 @@
+﻿<Page
+    x:Class="Frontend.Views.Payments"
+    x:Name="RootPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:Core.Models"
+    xmlns:local="using:Frontend.Views"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <local:BoolToTitleConverter x:Key="BoolToTitleConverter"/>
+
+        <local:StringToDecimalConverter x:Key="LitresConverter"/>
+        <local:StringToDecimalConverter x:Key="RateConverter"/>
+        <local:StringToDecimalConverter x:Key="DeductionsConverter"/>
+    </Page.Resources>
+
+    <SplitView
+        IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay}"
+        DisplayMode="Overlay"
+        PanePlacement="Right"
+        OpenPaneLength="420">
+
+        <SplitView.Pane>
+            <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" Padding="20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="14">
+
+                        <TextBlock Text="{Binding IsEditMode, Converter={StaticResource BoolToTitleConverter}}"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#4CAF50"/>
+
+                        <DatePicker Header="Payment Date"
+                                    HorizontalAlignment="Stretch"
+                                    Date="{Binding FormModel.PaymentDate, Mode=TwoWay}"/>
+
+                        <ComboBox Header="Select Farmer"
+                                  HorizontalAlignment="Stretch"
+                                  ItemsSource="{Binding Farmers}"
+                                  SelectedValue="{Binding FormModel.FarmerId, Mode=TwoWay}"
+                                  SelectedValuePath="Id"
+                                  DisplayMemberPath="FullName" />
+
+                        <TextBox Header="Total Litres Supplied"
+                                 InputScope="Number"
+                                 Text="{Binding FormModel.TotalLitres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LitresConverter}}" />
+
+                        <TextBox Header="Rate Per Litre (KES)"
+                                 InputScope="CurrencyAmount"
+                                 Text="{Binding FormModel.RatePerLitre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource RateConverter}}" />
+
+                        <TextBox Header="Total Deductions (if any)"
+                                 InputScope="CurrencyAmount"
+                                 Text="{Binding FormModel.TotalDeductions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DeductionsConverter}}" />
+
+                        <TextBox Header="Reference / Receipt Number"
+                                 PlaceholderText="e.g., TBL90234X..."
+                                 Text="{Binding FormModel.ReferenceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="4" Padding="12" Background="White">
+                            <StackPanel Spacing="6">
+                                <Grid>
+                                    <TextBlock Text="Gross Amount:" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding FormModel.GrossAmount}" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                                </Grid>
+                                <Grid>
+                                    <TextBlock Text="Deductions:" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding FormModel.TotalDeductions}" HorizontalAlignment="Right" Foreground="#F44336"/>
+                                </Grid>
+                                <MenuFlyoutSeparator Margin="0,4"/>
+                                <Grid>
+                                    <TextBlock Text="Net Payout Due:" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding FormModel.NetAmount}" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold" Foreground="#4CAF50"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Button Content="Process &amp; Save Payout"
+                                HorizontalAlignment="Stretch"
+                                Margin="0,6,0,0"
+                                Height="40"
+                                Background="#4CAF50"
+                                Foreground="White"
+                                Command="{Binding SaveCommand}" />
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </SplitView.Pane>
+
+        <SplitView.Content>
+            <StackPanel Padding="20" Spacing="10">
+
+                <Grid Margin="0,0,0,10">
+                    <StackPanel>
+                        <TextBlock Text="Farmer Payments Ledger" FontSize="22" FontWeight="Bold"/>
+                        <TextBlock Text="Manage cyclical 15-day payouts and collection period settlements." FontSize="12" Foreground="Gray"/>
+                    </StackPanel>
+
+                    <Button Content="+ Disburse Farmer Payment"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Background="#4CAF50"
+                            Foreground="White"
+                            Command="{Binding OpenAddCommand}" />
+                </Grid>
+
+                <Grid Background="#F5F5F5" Padding="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.3*"/>
+                        <ColumnDefinition Width="2.2*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1.7*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Date" FontWeight="SemiBold"/>
+                    <TextBlock Text="Farmer" Grid.Column="1" FontWeight="SemiBold"/>
+                    <TextBlock Text="Vol (L)" Grid.Column="2" FontWeight="SemiBold"/>
+                    <TextBlock Text="Gross Pay" Grid.Column="3" FontWeight="SemiBold"/>
+                    <TextBlock Text="Deductions" Grid.Column="4" FontWeight="SemiBold"/>
+                    <TextBlock Text="Net Total" Grid.Column="5" FontWeight="SemiBold"/>
+                    <TextBlock Text="Actions" Grid.Column="6" FontWeight="SemiBold"/>
+                </Grid>
+
+                <ListView ItemsSource="{Binding Payments}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Payment">
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.3*"/>
+                                    <ColumnDefinition Width="2.2*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="1.4*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.7*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Text="{x:Bind local:Payments.FormatShortDate(PaymentDate)}" VerticalAlignment="Center"/>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{x:Bind Farmer.FullName}" FontWeight="Medium"/>
+                                    <TextBlock Text="{x:Bind ReferenceNumber}" FontSize="11" Foreground="Gray"/>
+                                </StackPanel>
+
+                                <TextBlock Text="{x:Bind TotalLitres}" Grid.Column="2" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind GrossAmount}" Grid.Column="3" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind TotalDeductions}" Grid.Column="4" VerticalAlignment="Center" Foreground="#F44336"/>
+                                <TextBlock Text="{x:Bind NetAmount}" Grid.Column="5" VerticalAlignment="Center" FontWeight="Bold" Foreground="#4CAF50"/>
+
+                                <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                    <Button Content="Edit"
+                                            Background="#FFC107"
+                                            Foreground="Black"
+                                            Command="{Binding DataContext.OpenEditCommand, ElementName=RootPage}"
+                                            CommandParameter="{x:Bind}" />
+
+                                    <Button Content="Delete"
+                                            Background="#F44336"
+                                            Foreground="White"
+                                            Command="{Binding DataContext.DeleteCommand, ElementName=RootPage}"
+                                            CommandParameter="{x:Bind}" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </StackPanel>
+        </SplitView.Content>
+    </SplitView>
+</Page>

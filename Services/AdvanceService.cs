@@ -36,7 +36,7 @@ namespace Services
             existingAdvance.FarmerId = advance.FarmerId;
             existingAdvance.DateIssued = advance.DateIssued;
             existingAdvance.Amount = advance.Amount;
-            existingAdvance.IsSettled = advance.IsSettled;
+            existingAdvance.RepaidAmount = advance.RepaidAmount;
             existingAdvance.Notes = advance.Notes;
 
             await _context.SaveChangesAsync();
@@ -57,5 +57,16 @@ namespace Services
             return await _context.Advances.FindAsync(id);
         }
 
+        public async Task Delete(long id)
+        {
+            var advance = await _context.Advances.FindAsync(id);
+            if (advance == null)
+            {
+                throw new Exception("Invalid Id");
+            }
+            _context.Advances.Remove(advance);
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

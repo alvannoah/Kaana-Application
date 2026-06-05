@@ -12,17 +12,10 @@ namespace Frontend.ViewModels
     {
         private readonly ICollectionPeriodService _service;
 
-        public ObservableCollection<CollectionPeriod> CollectionPeriods { get; set; }
-            = new ObservableCollection<CollectionPeriod>();
-
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public bool IsClosed { get; set; }
-        public ICommand UpdateCollectionPeriodCommand { get; }
+        public ObservableCollection<CollectionPeriod> CollectionPeriods { get; }
+            = new();
 
         private CollectionPeriod selectedCollectionPeriod;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         public CollectionPeriod SelectedCollectionPeriod
         {
@@ -30,50 +23,48 @@ namespace Frontend.ViewModels
             set
             {
                 selectedCollectionPeriod = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(SelectedCollectionPeriod)));
+                OnPropertyChanged(nameof(SelectedCollectionPeriod));
             }
         }
 
-        public CollectionPeriodViewModel(ICollectionPeriodService service)
+        public ICommand ClosePeriodCommand { get; }
+
+        public CollectionPeriodViewModel(
+            ICollectionPeriodService service)
         {
             _service = service;
+
+            ClosePeriodCommand =
+                new RelayCommand<object>(async _ => await ClosePeriod());
         }
 
         public async Task LoadCollectionPeriods()
         {
-            var CollectionPeriods = await _service.GetCollectionPeriods();
+            var periods = await _service.GetAll();
 
             CollectionPeriods.Clear();
-            foreach (var f in CollectionPeriods)
-                CollectionPeriods.Add(f);
+
+            foreach (var period in periods)
+                CollectionPeriods.Add(period);
         }
 
-        public async Task AddCollectionPeriod()
+        private async Task ClosePeriod()
         {
-            await _service.AddCollectionPeriod(new CollectionPeriod
-            {
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now,
-                IsClosed = false
-            });
+            if (SelectedCollectionPeriod == null)
+                return;
+
+            await _service.ClosePeriod(
+                SelectedCollectionPeriod.Id);
 
             await LoadCollectionPeriods();
         }
 
-        public async Task UpdateCollectionPeriod()
-        {
-            await _service.UpdateCollectionPeriod(SelectedCollectionPeriod);
-            await LoadCollectionPeriods();
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public async Task LoadCollectionPeriod(long id)
-        {
-            SelectedCollectionPeriod = await _service.GetCollectionPeriodById(id);
-        }
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this,
+            PropertyChanged?.Invoke(
+                this,
                 new PropertyChangedEventArgs(propertyName));
         }
     }

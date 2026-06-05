@@ -52,5 +52,16 @@ namespace Services
             return await _context.Expenses.FindAsync(id);
         }
 
+        public async Task Delete(long id)
+        {
+            var record = await _context.Expenses.FindAsync(id);
+            if (record == null)
+            {
+                throw new Exception("Invalid Id");
+            }
+            _context.Expenses.Remove(record);
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

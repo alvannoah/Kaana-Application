@@ -1,9 +1,11 @@
 ﻿using Core.Models;
 using Core.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Frontend.ViewModels
 {
@@ -72,6 +74,17 @@ namespace Frontend.ViewModels
 
         private async Task Save()
         {
+
+            if (string.IsNullOrEmpty(FormModel.Name))
+            {
+                await ShowMessageDialogAsync("Validation Error", "Please input the collection center name!");
+                return;
+            } else if (string.IsNullOrEmpty(FormModel.ManagerName))
+            {
+                await ShowMessageDialogAsync("Validation Error", "Please input manager");
+                return;
+            }
+
             if (IsEditMode)
             {
                 await _service.UpdateCollectionCenter(FormModel);
@@ -113,5 +126,21 @@ namespace Frontend.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private async Task ShowMessageDialogAsync(string title, string content)
+        {
+            ContentDialog errorDialog = new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.ContentDialog"))
+            {
+                await errorDialog.ShowAsync();
+            }
+        }
     }
 }

@@ -150,6 +150,24 @@ namespace Frontend.ViewModels
 
         private async Task Save()
         {
+
+            if(FormModel.FarmerId == 0)
+            {
+                await ShowDialog("Please select a farmer");
+                return;
+            } else if(FormModel.CollectionCenterId == 0)
+            {
+                await ShowDialog("Please select a collection center");
+                return;
+            } else if (FormModel.Litres <= 0)
+            {
+                await ShowDialog("Litres must be greater than 0");
+                return;
+            } else if (FormModel.BuyingPricePerLitre <= 0)
+            {
+                await ShowDialog("Buying price per litre must be greater than 0");
+                return;
+            }
             var result = await _collectionPeriodService.EnsurePeriodIsOpen(FormModel.CollectionPeriodId);
 
             if (!result.Success)
@@ -203,7 +221,7 @@ namespace Frontend.ViewModels
             {
                 Title = "Warning",
                 Content = message,
-                CloseButtonText = "OK"
+                CloseButtonText = "OK",
             };
 
             await dialog.ShowAsync();

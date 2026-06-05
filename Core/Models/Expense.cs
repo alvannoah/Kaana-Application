@@ -15,6 +15,8 @@ namespace Core.Models
         public string? Quantity { get; set; }
 
         public decimal Amount { get; set; }
+
+        public string? Notes { get; set; }
         public long CollectionPeriodId { get; set; }
         public CollectionPeriod CollectionPeriod { get; set; }
     }

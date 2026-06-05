@@ -1,9 +1,11 @@
 ﻿using Core.Models;
 using Core.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Frontend.ViewModels
 {
@@ -110,6 +112,15 @@ namespace Frontend.ViewModels
 
         private async Task Save()
         {
+            if(FormModel.PrimaryPhone.Length == 10)
+            {
+                await ShowMessageDialogAsync("Validation Error", "Primary phone number cannot exceed 10 digits.");
+                return;
+            } else if (FormModel.PrimaryPhone.Equals(""))
+            {
+                await ShowMessageDialogAsync("Validation Error", "Primary phone number cannot be empty!");
+                return;
+            }
             if (IsEditMode)
             {
                 await _farmerService.UpdateFarmer(FormModel);
@@ -136,6 +147,22 @@ namespace Frontend.ViewModels
         {
             PropertyChanged?.Invoke(this,
                 new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async Task ShowMessageDialogAsync(string title, string content)
+        {
+            ContentDialog errorDialog = new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.ContentDialog"))
+            {
+                await errorDialog.ShowAsync();
+            }
         }
     }
 }

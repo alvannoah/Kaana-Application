@@ -46,7 +46,7 @@
                                  InputScope="Number"
                                  Text="{Binding FormModel.TotalLitres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LitresConverter}}" />
 
-                        <TextBox Header="Rate Per Litre (KES)"
+                        <TextBox Header="Rate Per Litre (UGX)"
                                  InputScope="CurrencyAmount"
                                  Text="{Binding FormModel.RatePerLitre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource RateConverter}}" />
 

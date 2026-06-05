@@ -28,11 +28,11 @@ namespace Services
                 throw new Exception("Invalid Expense!");
             }
 
-            expense.Date = expense.Date;
-            expense.Description = expense.Description;
-            expense.Quantity = expense.Quantity;
-            expense.Amount = expense.Amount;
-
+            existingRecord.Date = expense.Date;
+            existingRecord.Description = expense.Description;
+            existingRecord.Quantity = expense.Quantity;
+            existingRecord.Amount = expense.Amount;
+            existingRecord.Notes = expense.Notes;
 
             await _context.SaveChangesAsync();
         }

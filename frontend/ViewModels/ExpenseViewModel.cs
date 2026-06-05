@@ -24,7 +24,12 @@ namespace Frontend.ViewModels
             OpenAddCommand = new RelayCommand<object>(async m => OpenAdd());
             OpenEditCommand = new RelayCommand<Expense>(async m => OpenEdit(m));
             SaveCommand = new RelayCommand<object>(async _ => await Save());
-            DeleteCommand = new RelayCommand<Expense>(async e => await Delete(e));
+            DeleteCommand = new RelayCommand<Expense>(async e => await CallDelete(e));
+        }
+
+        private async Task CallDelete(Expense e)
+        {
+            await DeleteDialog(e);
         }
 
         public ObservableCollection<Expense> Expenses { get; }
@@ -117,6 +122,22 @@ namespace Frontend.ViewModels
         {
             var result = await _collectionPeriodService.EnsurePeriodIsOpen(FormModel.CollectionPeriodId);
 
+            if (FormModel.Amount > 0)
+            {
+                await ShowDialog("Amount cannot be less than or equal zero!");
+                return;
+            } else if (FormModel.Date == DateTime.MinValue)
+            {
+                await ShowDialog("Date cannot be empty!");
+                return;
+            }
+            else if (string.IsNullOrEmpty(FormModel.Description))
+            {
+                await ShowDialog("Description cannot be empty!");
+                return;
+            }
+            System.Diagnostics.Debug.WriteLine($"The actual date value is: {FormModel.Date}");
+
             if (!result.Success)
             {
                 await ShowDialog(result.Message);
@@ -173,6 +194,29 @@ namespace Frontend.ViewModels
             };
 
             await dialog.ShowAsync();
+        }
+
+        private async Task DeleteDialog(Expense e)
+        {
+            var dialog = new ContentDialog
+            {
+                Title = "Warning",
+                Content = "Are you sure you want to delete!",
+                CloseButtonText = "Cancel",
+                PrimaryButtonText = "Delete"
+            };
+
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                await Delete(e);
+                return;
+            }
+            else
+            {
+
+            }
         }
     }
 }
